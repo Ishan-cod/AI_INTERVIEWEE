@@ -4,14 +4,13 @@ import {
 } from "@langchain/core/prompts";
 import { Google_LLM, Groq_LLM } from "../ai_model";
 import { AIMessage, BaseMessage, HumanMessage } from "@langchain/core/messages";
-import { JsonOutputParser } from "@langchain/core/output_parsers";
 
-const chat_history: BaseMessage[] = [];
+// const chat_history: BaseMessage[] = [];
 
-async function chat_bot(human_message: string) {
-  const model = Google_LLM;
+async function chat_bot(human_message: string, chat_history: BaseMessage[]) {
+  const model = Groq_LLM;
 
-  const context_prompt: string = `1. You are a friendly and helpful interviewer. Ask the user questions based on the role they provide.
+  const context_prompt: string = `1. You are a friendly, helpful and jovial interviewer. Ask the user questions based on the role they provide.
 
     2.Accept the user's responses and assist them wherever necessary, but do not provide direct solutions. Instead, simplify or elaborate on the questions to guide them.
 

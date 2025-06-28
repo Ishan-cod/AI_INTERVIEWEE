@@ -4,7 +4,8 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 const Groq_LLM = new ChatOpenAI({
   apiKey: process.env.GROQ_API_KEY,
   model: "llama3-70b-8192",
-  maxTokens: 500,
+  maxTokens : 500,
+  temperature : 0.9,
   configuration: {
     baseURL: "https://api.groq.com/openai/v1",
   },
