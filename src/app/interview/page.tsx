@@ -82,7 +82,7 @@ export default function page() {
         <Sidebar />
         <Main_body>
           <div className="flex h-screen">
-            <div className="h-screen flex-2/3">
+            <div className="h-screen flex-6/10">
               <div className="flex justify-center items-center h-full p-2">
                 <div className="bg-[#09090B] h-full w-full rounded-lg overflow-hidden">
                   <div className=" w-full flex  justify-between items-center">
@@ -135,7 +135,7 @@ export default function page() {
               </div>
             </div>
 
-            <div className="flex-1/3 flex items-center justify-center p-2 pl-0">
+            <div className="flex-4/10 flex items-center justify-center p-2 pl-0">
               <div className="bg-[#09090B] h-full w-full rounded-lg  rounded-b-lg flex flex-col">
                 {/* message */}
                 <Message_BOX/>

@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Divider } from "@heroui/react";
-import React from "react";
+import React, { lazy } from "react";
 import { Roboto_Mono, Inter, Roboto } from "next/font/google";
 import Interview_dialog from "./Interview_dialog";
 
@@ -61,7 +61,7 @@ function Jobcard() {
             <Button className="bg-[#2A2626] hover:bg-gray-800">
               <div className={`${inter.className}`}>View Details</div>
             </Button>
-            <Interview_dialog/>
+            <Interview_dialog />
           </div>
         </CardFooter>
       </Card>

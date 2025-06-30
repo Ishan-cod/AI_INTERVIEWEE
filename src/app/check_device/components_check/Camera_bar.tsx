@@ -8,11 +8,18 @@ import {
   Video,
   VideoOff,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export default function Camera_bar() {
-  const [is_camera_on, set_is_camera_on] = useState(false);
-  const [is_mic_on, set_is_mic_on] = useState(false);
+type Props = {
+  is_video: boolean;
+  set_is_video: React.Dispatch<React.SetStateAction<boolean>>;
+};
+export default function Camera_bar({ is_video, set_is_video }: Props) {
+  const [is_camera_on, set_is_camera_on] = useState<boolean>(false);
+  const [is_mic_on, set_is_mic_on] = useState<boolean>(false);
+  useEffect(() => {
+    set_is_video(is_camera_on);
+  }, [is_camera_on]);
 
   return (
     <>
