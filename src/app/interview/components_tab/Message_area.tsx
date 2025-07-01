@@ -1,4 +1,10 @@
-import React, { useState } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import AI_Message from "./CHAT/AI_message";
 import Human_message from "./CHAT/Human_message";
 import { Separator } from "@/components/ui/separator";
@@ -7,103 +13,243 @@ import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import { Message_Container } from "./Message_container";
 import { Scrollable_MSG_AREA } from "./Scrollable_message_area";
-import axios from "axios";
-import { BaseMessage } from "@langchain/core/messages";
+import axios, { AxiosError } from "axios";
+import {
+  BaseMessage,
+  HumanMessage,
+  SystemMessage,
+} from "@langchain/core/messages";
+import { useSearchParams } from "next/navigation";
+import { speak } from "./CHAT/speak_text";
 
-interface msg_arr {
+interface Message {
   sender: "ai" | "human";
   content: string;
+  timestamp?: number;
+  id?: string;
 }
-export default function Message_BOX() {
-  const [input_msg, set_input_msg] = useState<string>("");
-  const [is_loading, set_is_loading] = useState<Boolean>(false);
-  const [msg_arr, set_msg_arr] = useState<Array<msg_arr>>([]);
-  const [chat_history, set_chat_history] = useState<BaseMessage[]>([]);
 
-  const handle_send_button = async () => {
-    const human_msg_obj: msg_arr = {
-      sender: "human",
-      content: input_msg,
-    };
-    set_msg_arr((prev_arr) => [...prev_arr, human_msg_obj]);
-    const human_msg = input_msg;
-    set_input_msg("");
-    set_is_loading(true);
-    const response = await axios.post("/api/artificial_int/interviewee", {
-      human_message: human_msg,
-      chat_history: chat_history,
+interface ApiResponse {
+  response: { data: string };
+  chat_history: BaseMessage[];
+}
+
+// Custom hook for managing speech state
+const useSpeech = () => {
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  const speakText = useCallback((text: string, onComplete?: () => void) => {
+    setIsSpeaking(true);
+    speak(text, () => {
+      setIsSpeaking(false);
+      onComplete?.();
     });
+  }, []);
 
-    if (response.status == 200) {
-      set_chat_history(response.data.chat_history);
-      const ai_msg = response.data.response.data;
-      const ai_obj: msg_arr = {
-        sender: "ai",
-        content: ai_msg,
+  return { isSpeaking, speakText };
+};
+
+// Custom hook for API calls
+const useApiCall = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const makeApiCall = useCallback(
+    async (
+      humanMessage: string,
+      chatHistory: BaseMessage[]
+    ): Promise<ApiResponse> => {
+      setIsLoading(true);
+      try {
+        const response = await axios.post<ApiResponse>(
+          "/api/artificial_int/interviewee",
+          {
+            human_message: humanMessage,
+            chat_history: chatHistory,
+          }
+        );
+
+        if (response.status !== 200) {
+          throw new Error(`API call failed with status: ${response.status}`);
+        }
+
+        return response.data;
+      } catch (error) {
+        const axiosError = error as AxiosError;
+        console.error(
+          "API call failed:",
+          axiosError.response?.data || axiosError.message
+        );
+        throw new Error("Failed to communicate with the AI service");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
+
+  return { isLoading, makeApiCall };
+};
+
+export default function Message_BOX() {
+  const searchParams = useSearchParams();
+  const jobRole = searchParams.get("role");
+  const interviewee = searchParams.get("user");
+
+  const [inputMsg, setInputMsg] = useState<string>("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [chatHistory, setChatHistory] = useState<BaseMessage[]>(() => [
+    new SystemMessage(
+      "When the Human tells their name and job role, greet them and ask for self intro politely, then begin the interview."
+    ),
+  ]);
+
+  const { isSpeaking, speakText } = useSpeech();
+  const { isLoading, makeApiCall } = useApiCall();
+  const hasInitialized = useRef(false);
+
+  // Memoized computed values
+  const isInputDisabled = useMemo(
+    () => isLoading || isSpeaking,
+    [isLoading, isSpeaking]
+  );
+
+  const placeholderText = useMemo(() => {
+    if (isSpeaking) return "🎤 Interviewer is speaking...";
+    if (isLoading) return "⏳ Thinking...";
+    return "Your response here...";
+  }, [isSpeaking, isLoading]);
+
+  // Generate unique message ID
+  const generateMessageId = useCallback(() => {
+    return `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }, []);
+
+  // Add message to the conversation
+  const addMessage = useCallback(
+    (sender: "ai" | "human", content: string) => {
+      const newMessage: Message = {
+        sender,
+        content,
+        timestamp: Date.now(),
+        id: generateMessageId(),
       };
-      set_msg_arr((prev_arr) => [...prev_arr, ai_obj]);
-      set_is_loading(false);
-    } else {
-      const ai_obj: msg_arr = {
-        sender: "ai",
-        content: "Failed to call LLM",
-      };
-      set_is_loading(false);
-    }
-  };
+      setMessages((prev) => [...prev, newMessage]);
+      return newMessage;
+    },
+    [generateMessageId]
+  );
+
+  // Handle AI response
+  const handleAiResponse = useCallback(
+    async (humanMessage: string, onComplete?: () => void) => {
+      try {
+        const apiResponse = await makeApiCall(humanMessage, chatHistory);
+
+        setChatHistory(apiResponse.chat_history);
+        const aiMessage = addMessage("ai", apiResponse.response.data);
+
+        speakText(aiMessage.content, onComplete);
+      } catch (error) {
+        console.error("Error handling AI response:", error);
+        const errorMessage = addMessage(
+          "ai",
+          "⚠️ Failed to get response from AI. Please try again."
+        );
+        speakText(errorMessage.content, onComplete);
+      }
+    },
+    [makeApiCall, chatHistory, addMessage, speakText]
+  );
+
+  // Initial system call
+  const initializeChat = useCallback(async () => {
+    if (!jobRole || !interviewee || hasInitialized.current) return;
+
+    hasInitialized.current = true;
+    const initialMessage = `My name is: ${interviewee}, Job Role: ${jobRole}`;
+    await handleAiResponse(initialMessage);
+  }, [jobRole, interviewee, handleAiResponse]);
+
+  // Handle send button click
+  const handleSendMessage = useCallback(async () => {
+    const trimmedInput = inputMsg.trim();
+    if (!trimmedInput || isInputDisabled) return;
+
+    addMessage("human", trimmedInput);
+    setInputMsg("");
+
+    await handleAiResponse(trimmedInput);
+  }, [inputMsg, isInputDisabled, addMessage, handleAiResponse]);
+
+  // Handle Enter key press
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter" && !isInputDisabled) {
+        e.preventDefault();
+        handleSendMessage();
+      }
+    },
+    [isInputDisabled, handleSendMessage]
+  );
+
+  // Initialize chat on component mount
+  useEffect(() => {
+    initializeChat();
+  }, [initializeChat]);
+
+  // Validation for required parameters
+  if (!jobRole || !interviewee) {
+    return (
+      <Message_Container>
+        <div className="flex items-center justify-center h-full text-amber-50">
+          <p>
+            Missing required parameters: role and user must be provided in URL
+          </p>
+        </div>
+      </Message_Container>
+    );
+  }
 
   return (
     <Message_Container>
-      {/* Messages container with proper scrolling */}
       <Scrollable_MSG_AREA>
-        {msg_arr.map((msg_obj) =>
-          msg_obj.sender == "ai" ? (
-            <AI_Message message={msg_obj.content} />
+        {messages.map((message) =>
+          message.sender === "ai" ? (
+            <AI_Message key={message.id} message={message.content} />
           ) : (
-            <Human_message message={msg_obj.content} />
+            <Human_message key={message.id} message={message.content} />
           )
         )}
       </Scrollable_MSG_AREA>
 
       <Separator className="bg-white/15 flex-shrink-0" />
 
-      {/* Input container - fixed height */}
       <div className="flex-shrink-0 pt-2">
         <div className="text-amber-50 flex">
-          {!is_loading ? (
-            <Input
-              placeholder="Your Response here..."
-              className="border-0 bg-[#212121]"
-              value={input_msg}
-              onChange={(e) => {
-                set_input_msg(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                if (e.key == "Enter") {
-                  handle_send_button();
-                }
-              }}
-            />
-          ) : (
-            <Input
-              placeholder="Interviewer is cooking response"
-              className="border-0 bg-[#212121]"
-              value={input_msg}
-              disabled
-            />
-          )}
-          {!is_loading ? (
-            <Button
-              className="ml-2 hover:bg-[#212121]"
-              onClick={handle_send_button}
-            >
+          <Input
+            placeholder={placeholderText}
+            className="border-0 bg-[#212121]"
+            value={inputMsg}
+            onChange={(e) => setInputMsg(e.target.value)}
+            onKeyDown={handleKeyDown}
+            disabled={isInputDisabled}
+            aria-label="Type your message"
+          />
+          <Button
+            className="ml-2 hover:bg-[#212121]"
+            onClick={handleSendMessage}
+            disabled={isInputDisabled}
+            aria-label="Send message"
+          >
+            {isLoading || isSpeaking ? (
+              <div
+                className="animate-spin rounded-full h-5 w-5 border-t-2 border-white border-solid"
+                aria-label="Loading"
+              />
+            ) : (
               <Send />
-            </Button>
-          ) : (
-            <Button className="ml-2 hover:bg-[#212121]" disabled>
-              <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-white border-solid"></span>
-            </Button>
-          )}
+            )}
+          </Button>
         </div>
       </div>
     </Message_Container>

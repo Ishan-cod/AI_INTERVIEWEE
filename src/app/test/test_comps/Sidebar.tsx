@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 
 import React from "react";
 import { Separator } from "@/components/ui/separator";
-import { Inter, Roboto } from "next/font/google";
+import { Inter, Poppins, Roboto } from "next/font/google";
 import Recent_act from "./Recent_act";
 
 import User_profile_drpdwn from "./User_profile_drpdwn";
+import { InfinityIcon } from "lucide-react";
 
 // My Dashboard
 // Jobs available
@@ -13,6 +14,12 @@ import User_profile_drpdwn from "./User_profile_drpdwn";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700"],
 });
 
 const roboto = Roboto({
@@ -23,7 +30,14 @@ const roboto = Roboto({
 export default function Sidebar() {
   return (
     <div className="bg-[#09090B] w-[300px] h-full justify-center items-start text-amber-50">
-      <div className="bg-amber-300 w-full text-black">APP NAME</div>
+      <div
+        className={`w-full text-xl font-extrabold bg-gradient-to-r from-purple-500 via-blue-400 to-teal-300 bg-clip-text text-transparent flex ${poppins.className} p-2 items-center`}
+      >
+        <div>
+          <InfinityIcon className="text-white ml-2 mr-2" size={30}/>
+        </div>
+        &lt;AI/&gt; <div className={`${poppins.className}`}>VUE</div>
+      </div>
       <div>
         <div className="m-0.5 pt-1 pb-1">
           <User_profile_drpdwn />

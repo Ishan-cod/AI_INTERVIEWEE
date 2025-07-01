@@ -12,6 +12,7 @@ import { Divider } from "@heroui/react";
 import React, { lazy } from "react";
 import { Roboto_Mono, Inter, Roboto } from "next/font/google";
 import Interview_dialog from "./Interview_dialog";
+import { useRouter } from "next/navigation";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -37,6 +38,14 @@ interface Jobcard_detail {
   experience: string;
 }
 
+// const handle_card_click = () => {
+//   const currentPath = window.location.pathname;
+//   const params = new URLSearchParams(window.location.search);
+//   params.set("role", "Frontend Developer");
+
+//   router.replace(`${currentPath}?${params.toString()}`);
+// };
+
 function Jobcard() {
   return (
     <div>
@@ -58,7 +67,7 @@ function Jobcard() {
         </CardContent>
         <CardFooter>
           <div className=" w-[367px] flex justify-end">
-            <Button className="bg-[#2A2626] hover:bg-gray-800">
+            <Button className="bg-[#2A2626] hover:scale-110">
               <div className={`${inter.className}`}>View Details</div>
             </Button>
             <Interview_dialog />
