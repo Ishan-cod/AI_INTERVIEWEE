@@ -19,6 +19,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Camera_bar from "../check_device/components_check/Camera_bar";
 import Video_BOX from "./components_tab/Video_call";
 import Message_BOX from "./components_tab/Message_area";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700"],
+});
 
 const roboto_mono = Roboto_Mono({
   subsets: ["latin"],
@@ -82,7 +89,7 @@ export default function page() {
         <Sidebar />
         <Main_body>
           <div className="flex h-screen">
-            <div className="h-screen flex-2/3">
+            <div className="h-screen flex-6/10">
               <div className="flex justify-center items-center h-full p-2">
                 <div className="bg-[#09090B] h-full w-full rounded-lg overflow-hidden">
                   <div className=" w-full flex  justify-between items-center">
@@ -135,12 +142,12 @@ export default function page() {
               </div>
             </div>
 
-            <div className="flex-1/3 flex items-center justify-center p-2 pl-0">
+            <div className="flex-4/10 flex items-center justify-center p-2 pl-0">
               <div className="bg-[#09090B] h-full w-full rounded-lg  rounded-b-lg flex flex-col">
                 {/* message */}
-                <Message_BOX/>
+                <Message_BOX />
                 {/* Video call */}
-                <Video_BOX/>
+                <Video_BOX />
               </div>
             </div>
           </div>

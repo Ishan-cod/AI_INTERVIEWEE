@@ -46,7 +46,7 @@ async function chat_bot(human_message: string, chat_history: BaseMessage[]) {
       chat_history: chat_history,
     });
 
-    console.log(response.content);
+    // console.log(response.content);
     const JSON_response = {
       data: response.content,
     };
@@ -54,7 +54,7 @@ async function chat_bot(human_message: string, chat_history: BaseMessage[]) {
     chat_history.push(new HumanMessage(human_message));
     chat_history.push(new AIMessage(response.content.toString()));
 
-    console.log("This is chat_history : ", chat_history);
+    // console.log("This is chat_history : ", chat_history);
 
     return JSON_response;
   } catch (error) {

@@ -3,12 +3,12 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface job_interface extends Document {
   job_title: string;
   location: string;
-  country: string;
+  country?: string;
   salary: number;
   skills_required: Array<string>;
   company_name: string;
   experience_required: string;
-  job_description: string;
+  job_description?: string;
   created_at: Date;
 }
 

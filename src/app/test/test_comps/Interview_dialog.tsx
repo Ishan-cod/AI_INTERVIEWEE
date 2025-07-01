@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/card";
 import { CloudUpload } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,11 +30,15 @@ const inter = Inter({
 export default function Interview_dialog() {
   const [is_loading, set_is_loading] = useState(false);
 
+  const handle_click = () => {
+    set_is_loading(!is_loading);
+  };
+
   return (
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="bg-[#F9EB71] ml-[7px] text-[#2A2626] hover:bg-amber-300">
+          <Button className="bg-gradient-to-r from-purple-500 via-blue-400 to-teal-300 ml-[7px] text-white hover:scale-110">
             <div className={`${inter.className}`}>Take Interview</div>
           </Button>
         </DialogTrigger>
@@ -79,11 +84,11 @@ export default function Interview_dialog() {
                     </div>
                   </DialogClose>
                   <div>
-                    <Link href={"/check_device"}>
+                    <Link href={"/check_device?role=frontend%20developer"}>
                       {!is_loading ? (
                         <Button
                           className="bg-white text-black hover:bg-gray-300"
-                          onClick={() => set_is_loading(!is_loading)}
+                          onClick={handle_click}
                         >
                           Proceed
                         </Button>

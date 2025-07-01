@@ -6,9 +6,17 @@ import Toggle_camera_button from "./components_check/Toggle_camera_button";
 import Camera_bar from "./components_check/Camera_bar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export default function page() {
+  const params = useSearchParams();
   const [is_loading, set_is_loading] = useState(false);
+
+  const handle_click = () => {
+    set_is_loading(!is_loading);
+    const role = params.get("role");
+    alert(`search params : ${role}`);
+  };
 
   return (
     <div className="h-screen overflow-hidden">
@@ -16,12 +24,11 @@ export default function page() {
         <Sidebar />
         <Main_body>
           <div className="flex h-full w-full items-center justify-center">
-            <Link href={"/interview"}>
+            <Link
+              href={"/interview?role=frontend+developer&user=Ishan%20Jaiswal"}
+            >
               {!is_loading ? (
-                <Button
-                  className="hover:bg-[#212121]"
-                  onClick={() => set_is_loading(!is_loading)}
-                >
+                <Button className="hover:bg-[#212121]" onClick={handle_click}>
                   Page underprocess proceed to interview
                 </Button>
               ) : (
