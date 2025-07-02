@@ -1,6 +1,6 @@
 import React from "react";
 import Sidebar from "../test/test_comps/Sidebar";
-import Main_body from "../test/test_comps/Main_body";
+import Main_body from "../test/test_comps/MainBody";
 
 export default function page() {
   return (

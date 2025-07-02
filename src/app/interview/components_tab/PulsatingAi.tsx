@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 export default function AICallRipple({ imgSrc }: { imgSrc: string }) {
@@ -8,7 +9,7 @@ export default function AICallRipple({ imgSrc }: { imgSrc: string }) {
       <span className="absolute w-3/4 h-3/4 rounded-full animate-ping bg-blue-400 opacity-30 delay-200"></span>
 
       {/* Pulsing Image */}
-      <img
+      <Image
         src={imgSrc}
         alt="AI Avatar"
         className="w-24 h-24 rounded-full z-10 animate-pulse border-4 border-white shadow-lg"

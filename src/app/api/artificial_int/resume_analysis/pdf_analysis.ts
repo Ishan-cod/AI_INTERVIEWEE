@@ -2,7 +2,9 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { Google_LLM } from "../ai_model";
 import { JsonOutputParser } from "@langchain/core/output_parsers";
 
-async function pdf_analysis(raw_pdf_text: string): Promise<any> {
+async function pdf_analysis(
+  raw_pdf_text: string
+): Promise<Record<string, any>> {
   try {
     const model = Google_LLM;
 
@@ -37,10 +39,10 @@ async function pdf_analysis(raw_pdf_text: string): Promise<any> {
     );
 
     return JSON_parsed_response[0];
-  } catch (error) {
+  } catch (e) {
+    console.log(e);
     throw new Error("Error in resume extraction");
   }
 }
 
-
-export {pdf_analysis}
+export { pdf_analysis };

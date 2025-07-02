@@ -11,28 +11,26 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
-import { Message_Container } from "./Message_container";
-import { Scrollable_MSG_AREA } from "./Scrollable_message_area";
+import { Message_Container } from "./MessageBoxContainer";
+import { Scrollable_MSG_AREA } from "./ScrollableMessageArea";
 import axios, { AxiosError } from "axios";
-import {
-  BaseMessage,
-  HumanMessage,
-  SystemMessage,
-} from "@langchain/core/messages";
+import { BaseMessage, SystemMessage } from "@langchain/core/messages";
 import { useSearchParams } from "next/navigation";
-import { speak } from "./CHAT/speak_text";
+import { speak} from "../../../utils/speak_text";
+import { useAIResponseStore } from "@/app/store/useStore_Zustand";
 
+// Interface defination
 interface Message {
   sender: "ai" | "human";
   content: string;
   timestamp?: number;
   id?: string;
 }
-
 interface ApiResponse {
   response: { data: string };
   chat_history: BaseMessage[];
 }
+
 
 // Custom hook for managing speech state
 const useSpeech = () => {
@@ -91,11 +89,22 @@ const useApiCall = () => {
 };
 
 export default function Message_BOX() {
+
+  // Getting job detail and interviewee from Params
   const searchParams = useSearchParams();
   const jobRole = searchParams.get("role");
   const interviewee = searchParams.get("user");
 
+
+  
   const [inputMsg, setInputMsg] = useState<string>("");
+
+  // Logo change State (Zustand)
+  const toggle_ai_responding = useAIResponseStore(
+    (state) => state.toggleisAiResponding
+  );
+
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatHistory, setChatHistory] = useState<BaseMessage[]>(() => [
     new SystemMessage(
@@ -108,10 +117,10 @@ export default function Message_BOX() {
   const hasInitialized = useRef(false);
 
   // Memoized computed values
-  const isInputDisabled = useMemo(
-    () => isLoading || isSpeaking,
-    [isLoading, isSpeaking]
-  );
+  const isInputDisabled = useMemo(() => {
+    toggle_ai_responding(isLoading || isSpeaking);
+    return isLoading || isSpeaking;
+  }, [isLoading, isSpeaking]);
 
   const placeholderText = useMemo(() => {
     if (isSpeaking) return "🎤 Interviewer is speaking...";
@@ -192,7 +201,7 @@ export default function Message_BOX() {
     [isInputDisabled, handleSendMessage]
   );
 
-  // Initialize chat on component mount
+  // Initialize chat on component mount (i.e page first load)
   useEffect(() => {
     initializeChat();
   }, [initializeChat]);
@@ -213,6 +222,7 @@ export default function Message_BOX() {
   return (
     <Message_Container>
       <Scrollable_MSG_AREA>
+        {/* LOADING MSG CONTAINER */}
         {messages.map((message) =>
           message.sender === "ai" ? (
             <AI_Message key={message.id} message={message.content} />
@@ -220,12 +230,14 @@ export default function Message_BOX() {
             <Human_message key={message.id} message={message.content} />
           )
         )}
+        {/* LOAD */}
       </Scrollable_MSG_AREA>
 
       <Separator className="bg-white/15 flex-shrink-0" />
 
       <div className="flex-shrink-0 pt-2">
         <div className="text-amber-50 flex">
+          {/* MSG PLACEHOLDER */}
           <Input
             placeholder={placeholderText}
             className="border-0 bg-[#212121]"
@@ -235,6 +247,8 @@ export default function Message_BOX() {
             disabled={isInputDisabled}
             aria-label="Type your message"
           />
+          
+          {/* SEND MSG BUTTON */}
           <Button
             className="ml-2 hover:bg-[#212121]"
             onClick={handleSendMessage}
@@ -250,6 +264,8 @@ export default function Message_BOX() {
               <Send />
             )}
           </Button>
+          {/* SEND MSG BUTTON */}
+
         </div>
       </div>
     </Message_Container>

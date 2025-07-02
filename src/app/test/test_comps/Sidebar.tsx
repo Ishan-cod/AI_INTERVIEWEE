@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import { Inter, Poppins, Roboto } from "next/font/google";
-import Recent_act from "./Recent_act";
+import Recent_act from "./RecentActDiv";
 
-import User_profile_drpdwn from "./User_profile_drpdwn";
+import User_profile_drpdwn from "./UserProfileDrpD";
 import { InfinityIcon } from "lucide-react";
 
 // My Dashboard

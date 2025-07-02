@@ -1,20 +1,19 @@
 "use client";
 import React, { useState } from "react";
 import Sidebar from "../test/test_comps/Sidebar";
-import Main_body from "../test/test_comps/Main_body";
-import Toggle_camera_button from "./components_check/Toggle_camera_button";
-import Camera_bar from "./components_check/Camera_bar";
+import Main_body from "../test/test_comps/MainBody";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-export default function page() {
-  const params = useSearchParams();
+export default function Page() {
+  const searchParams = useSearchParams();
   const [is_loading, set_is_loading] = useState(false);
 
   const handle_click = () => {
     set_is_loading(!is_loading);
-    const role = params.get("role");
+    const role = searchParams.get("role");
     alert(`search params : ${role}`);
   };
 

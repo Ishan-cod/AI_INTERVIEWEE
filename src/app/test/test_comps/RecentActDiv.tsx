@@ -5,7 +5,9 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
-export default function Recent_act() {
+export default function RecentActDiv() {
+
+  // TODO: Fetch from backend
   return (
     <div className="flex justify-between items-center m-0.5 rounded-sm p-2 hover:bg-[#212121] mt-2 cursor-pointer">
       <div className={`text-white/85 text-sm ${inter.className}`}>

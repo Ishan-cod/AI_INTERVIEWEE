@@ -1,7 +1,7 @@
 import { job_model } from "@/models/job.model";
 import dbConnect from "@/utils/db_connect";
 
-export async function GET(request: Request) {
+export async function GET() {
   await dbConnect();
 
   const all_jobs = await job_model.find();
