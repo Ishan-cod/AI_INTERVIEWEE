@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import Sidebar from "../test/test_comps/Sidebar";
-import Main_body from "../test/test_comps/MainBody";
+import Sidebar from "../jobs_available/test_comps/Sidebar";
+import Main_body from "../jobs_available/test_comps/MainBody";
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

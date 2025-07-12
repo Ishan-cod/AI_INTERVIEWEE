@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Sidebar from "../test/test_comps/Sidebar";
-import MainBody from "../test/test_comps/MainBody";
+import Sidebar from "../jobs_available/test_comps/Sidebar";
+import MainBody from "../jobs_available/test_comps/MainBody";
 
 import { Button } from "@/components/ui/button";
 import { SquareCheckBig } from "lucide-react";
