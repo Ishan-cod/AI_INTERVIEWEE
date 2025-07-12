@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -11,7 +9,7 @@ import {
 import { Divider } from "@heroui/react";
 import React, { lazy } from "react";
 import { Roboto_Mono, Inter, Roboto } from "next/font/google";
-import Interview_dialog from "./Interview_dialog";
+import Interview_dialog from "./UploadResumeDialog";
 import { useRouter } from "next/navigation";
 
 const roboto = Roboto({
@@ -29,23 +27,7 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-interface Jobcard_detail {
-  role: string;
-  city: string;
-  country: string;
-  salary: number;
-  time: string;
-  experience: string;
-}
-
-// const handle_card_click = () => {
-//   const currentPath = window.location.pathname;
-//   const params = new URLSearchParams(window.location.search);
-//   params.set("role", "Frontend Developer");
-
-//   router.replace(`${currentPath}?${params.toString()}`);
-// };
-
+// TODO: Fetch from DB
 function Jobcard() {
   return (
     <div>

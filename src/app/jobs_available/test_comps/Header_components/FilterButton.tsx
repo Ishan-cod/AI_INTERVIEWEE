@@ -8,7 +8,7 @@ const roboto = Roboto({
   variable: "--font-roboto",
 });
 
-export default function Filter_button() {
+export default function FilterButton() {
   return (
     <div>
       <Button

@@ -2,7 +2,7 @@ import {
   ChatPromptTemplate,
   MessagesPlaceholder,
 } from "@langchain/core/prompts";
-import { Google_LLM, Groq_LLM } from "../ai_model";
+import { Groq_LLM } from "../ai_model";
 import { AIMessage, BaseMessage, HumanMessage } from "@langchain/core/messages";
 
 // const chat_history: BaseMessage[] = [];

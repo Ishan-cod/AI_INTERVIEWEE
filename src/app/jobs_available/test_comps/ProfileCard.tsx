@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { ChevronDown, User } from "lucide-react";
 import React from "react";
 
-export default function Profile_Card() {
+export default function ProfileCard() {
   return (
     <Card className="bg-[#212121] rounded-lg h-12 justify-center border-0">
       <div className="flex justify-between items-center">

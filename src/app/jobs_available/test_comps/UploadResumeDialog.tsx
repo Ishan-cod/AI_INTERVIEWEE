@@ -3,9 +3,6 @@ import {
   Dialog,
   DialogTrigger,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -20,14 +17,13 @@ import {
 } from "@/components/ui/card";
 import { CloudUpload } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
 
-export default function Interview_dialog() {
+export default function UploadResumeDialog() {
   const [is_loading, set_is_loading] = useState(false);
 
   const handle_click = () => {

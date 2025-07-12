@@ -10,41 +10,38 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, ChevronDownCircle } from "lucide-react";
-import { Inter, Roboto, Roboto_Mono } from "next/font/google";
+import { ChevronDown } from "lucide-react";
+import { Inter} from "next/font/google";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const roboto_mono = Roboto_Mono({
-  subsets: ["latin"],
-  variable: "--font-roboto_mono",
-});
 
+// FONTS IMPORT
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
+;
 
-const roboto = Roboto({
-  subsets: ["latin"],
-  variable: "--font-roboto",
-});
-
-export function Language_Changer() {
+export function LanguageChanger() {
   const router = useRouter();
   const search_params = useSearchParams();
   const [position, setPosition] = React.useState(search_params.get("lang"));
 
+  // URL update on language change
   const update_url = (newLang: string) => {
     const newURL = new URL(window.location.href);
     newURL.searchParams.set("lang", newLang);
     router.replace(newURL.toString());
   };
 
+  // Change handler
   const handleChange = (val: string) => {
     setPosition(val); // Update state
     update_url(val); // Update URL using new value
   };
 
+
+  // Changing RADIO position on changing the URL
   React.useEffect(() => {
     const params = search_params.get("lang");
     if (!params) {

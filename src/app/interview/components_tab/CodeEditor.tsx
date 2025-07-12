@@ -1,15 +1,15 @@
 import { Editor } from "@monaco-editor/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+
+import React from "react";
 
 interface editor_interface {
   language: string;
-  default_code : string
+  default_code: string;
 }
 
-export default function Code_Editor(editor_lang : editor_interface) {
+export default function CodeEditor(editor_lang: editor_interface) {
   return (
-    <Editor 
+    <Editor
       defaultLanguage={editor_lang.language}
       defaultValue={editor_lang.default_code}
       theme="vs-dark"

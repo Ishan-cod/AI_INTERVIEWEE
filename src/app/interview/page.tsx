@@ -1,46 +1,28 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Sidebar from "../test/test_comps/Sidebar";
-import Main_body from "../test/test_comps/Main_body";
-import { Input } from "@/components/ui/input";
+import Sidebar from "../jobs_available/test_comps/Sidebar";
+import MainBody from "../jobs_available/test_comps/MainBody";
+
 import { Button } from "@/components/ui/button";
-import { Send, SquareCheckBig } from "lucide-react";
-import { Divider } from "@heroui/react";
-import { Separator } from "@/components/ui/separator";
+import { SquareCheckBig } from "lucide-react";
+import { LanguageChanger } from "./components_tab/LanguageDropdown";
+import { Inter } from "next/font/google";
+import CodeEditor from "./components_tab/CodeEditor";
 
-import { Editor } from "@monaco-editor/react";
-
-import { Language_Changer } from "./components_tab/language_dropdown";
-import { Inter, Jaini_Purva, Roboto, Roboto_Mono } from "next/font/google";
-import Code_Editor from "./components_tab/Code_editor";
-import AI_Message from "./components_tab/CHAT/AI_message";
-import Human_message from "./components_tab/CHAT/Human_message";
 import { useRouter, useSearchParams } from "next/navigation";
-import Camera_bar from "../check_device/components_check/Camera_bar";
-import Video_BOX from "./components_tab/Video_call";
-import Message_BOX from "./components_tab/Message_area";
-import { Poppins } from "next/font/google";
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  variable: "--font-poppins",
-  weight: ["400", "500", "600", "700"],
-});
-
-const roboto_mono = Roboto_Mono({
-  subsets: ["latin"],
-  variable: "--font-roboto_mono",
-});
+import VideoBox from "./components_tab/VideoArea";
+import MessageBox from "./components_tab/MessageAreaHandler";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
 
-const roboto = Roboto({
-  subsets: ["latin"],
-  variable: "--font-roboto",
-});
+// const roboto = Roboto({
+//   subsets: ["latin"],
+//   variable: "--font-roboto",
+// });
 
 const default_code_obj = [
   {
@@ -67,11 +49,12 @@ int main()
   },
 ];
 
-export default function page() {
+export default function Page() {
   const search_params = useSearchParams();
   const router = useRouter();
   const [language, set_language] = useState(search_params.get("lang"));
 
+  // Params update for accessing language of editor
   useEffect(() => {
     if (!search_params.has("lang")) {
       set_language("javascript");
@@ -87,8 +70,11 @@ export default function page() {
     <div className="h-screen overflow-hidden">
       <div className="h-full flex">
         <Sidebar />
-        <Main_body>
+        <MainBody>
           <div className="flex h-screen">
+
+            {/* Code Editor area starts */}
+
             <div className="h-screen flex-6/10">
               <div className="flex justify-center items-center h-full p-2">
                 <div className="bg-[#09090B] h-full w-full rounded-lg overflow-hidden">
@@ -102,7 +88,7 @@ export default function page() {
                     </div>
                     <div className="flex">
                       <div className="m-1.5 mt-1 mb-0">
-                        <Language_Changer />
+                        <LanguageChanger />
                       </div>
                       <div>
                         <Button className="m-1.5 mt-1 mb-0">
@@ -112,27 +98,27 @@ export default function page() {
                     </div>
                   </div>
                   <div className="w-full h-full p-1.5">
-                    {/* Code editor */}
+                    {/* Code editors */}
                     {language == "cpp" && (
-                      <Code_Editor
+                      <CodeEditor
                         language="cpp"
                         default_code={default_code_obj[0].cpp}
                       />
                     )}
                     {language == "java" && (
-                      <Code_Editor
+                      <CodeEditor
                         language="java"
                         default_code={default_code_obj[0].java}
                       />
                     )}
                     {language == "javascript" && (
-                      <Code_Editor
+                      <CodeEditor
                         language="javascript"
                         default_code={default_code_obj[0].javascript}
                       />
                     )}
                     {language == "python" && (
-                      <Code_Editor
+                      <CodeEditor
                         language="python"
                         default_code={default_code_obj[0].python}
                       />
@@ -142,16 +128,18 @@ export default function page() {
               </div>
             </div>
 
+            {/* Code Editor area ends */}
+
             <div className="flex-4/10 flex items-center justify-center p-2 pl-0">
               <div className="bg-[#09090B] h-full w-full rounded-lg  rounded-b-lg flex flex-col">
                 {/* message */}
-                <Message_BOX />
+                <MessageBox />
                 {/* Video call */}
-                <Video_BOX />
+                <VideoBox />
               </div>
             </div>
           </div>
-        </Main_body>
+        </MainBody>
       </div>
     </div>
   );
