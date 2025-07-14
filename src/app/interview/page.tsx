@@ -9,10 +9,11 @@ import { LanguageChanger } from "./components_tab/LanguageDropdown";
 import { Inter } from "next/font/google";
 import CodeEditor from "./components_tab/CodeEditor";
 
-import { useRouter, useSearchParams } from "next/navigation";
+
 
 import VideoBox from "./components_tab/VideoArea";
 import MessageBox from "./components_tab/MessageAreaHandler";
+import { useChangeLanguage } from "../store/useStore_Zustand";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -50,21 +51,7 @@ int main()
 ];
 
 export default function Page() {
-  const search_params = useSearchParams();
-  const router = useRouter();
-  const [language, set_language] = useState(search_params.get("lang"));
-
-  // Params update for accessing language of editor
-  useEffect(() => {
-    if (!search_params.has("lang")) {
-      set_language("javascript");
-      const newURL = new URL(window.location.href);
-      newURL.searchParams.set("lang", "javascript");
-      router.replace(newURL.toString());
-    } else {
-      set_language(search_params.get("lang"));
-    }
-  }, [search_params]);
+  const { language } = useChangeLanguage();
 
   return (
     <div className="h-screen overflow-hidden">
@@ -72,7 +59,6 @@ export default function Page() {
         <Sidebar />
         <MainBody>
           <div className="flex h-screen">
-
             {/* Code Editor area starts */}
 
             <div className="h-screen flex-6/10">

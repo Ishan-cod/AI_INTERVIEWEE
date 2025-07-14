@@ -11,45 +11,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { Inter} from "next/font/google";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Inter } from "next/font/google";
 
+import { useChangeLanguage } from "@/app/store/useStore_Zustand";
 
 // FONTS IMPORT
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 });
-;
-
 export function LanguageChanger() {
-  const router = useRouter();
-  const search_params = useSearchParams();
-  const [position, setPosition] = React.useState(search_params.get("lang"));
-
-  // URL update on language change
-  const update_url = (newLang: string) => {
-    const newURL = new URL(window.location.href);
-    newURL.searchParams.set("lang", newLang);
-    router.replace(newURL.toString());
-  };
+  const [position, setPosition] = React.useState("javascript");
+  const { set_language } = useChangeLanguage();
 
   // Change handler
   const handleChange = (val: string) => {
     setPosition(val); // Update state
-    update_url(val); // Update URL using new value
+    if (val == "javascript") set_language("javascript");
+    else if (val == "python")
+      set_language("python"); // Update URL using new value
+    else if (val == "cpp") set_language("cpp");
+    else set_language("java"); // Update URL using new value
   };
-
-
-  // Changing RADIO position on changing the URL
-  React.useEffect(() => {
-    const params = search_params.get("lang");
-    if (!params) {
-      setPosition("javascript");
-    } else {
-      setPosition(params as string);
-    }
-  }, [search_params]);
 
   return (
     <DropdownMenu>

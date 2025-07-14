@@ -15,9 +15,12 @@ import { Message_Container } from "./MessageBoxContainer";
 import { Scrollable_MSG_AREA } from "./ScrollableMessageArea";
 import axios, { AxiosError } from "axios";
 import { BaseMessage, SystemMessage } from "@langchain/core/messages";
-import { useSearchParams } from "next/navigation";
-import { speak} from "../../../utils/speak_text";
-import { useAIResponseStore } from "@/app/store/useStore_Zustand";
+
+import { speak } from "../../../utils/speak_text";
+import {
+  useAIResponseStore,
+  useInterviewRole,
+} from "@/app/store/useStore_Zustand";
 
 // Interface defination
 interface Message {
@@ -30,7 +33,6 @@ interface ApiResponse {
   response: { data: string };
   chat_history: BaseMessage[];
 }
-
 
 // Custom hook for managing speech state
 const useSpeech = () => {
@@ -89,21 +91,16 @@ const useApiCall = () => {
 };
 
 export default function Message_BOX() {
+  const { user, job_role } = useInterviewRole();
+  const interviewee = user;
+  const jobRole = job_role;
 
-  // Getting job detail and interviewee from Params
-  const searchParams = useSearchParams();
-  const jobRole = searchParams.get("role");
-  const interviewee = searchParams.get("user");
-
-
-  
   const [inputMsg, setInputMsg] = useState<string>("");
 
   // Logo change State (Zustand)
   const toggle_ai_responding = useAIResponseStore(
     (state) => state.toggleisAiResponding
   );
-
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatHistory, setChatHistory] = useState<BaseMessage[]>(() => [
@@ -247,7 +244,7 @@ export default function Message_BOX() {
             disabled={isInputDisabled}
             aria-label="Type your message"
           />
-          
+
           {/* SEND MSG BUTTON */}
           <Button
             className="ml-2 hover:bg-[#212121]"
@@ -265,7 +262,6 @@ export default function Message_BOX() {
             )}
           </Button>
           {/* SEND MSG BUTTON */}
-
         </div>
       </div>
     </Message_Container>

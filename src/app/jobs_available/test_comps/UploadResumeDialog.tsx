@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/card";
 import { CloudUpload } from "lucide-react";
 import Link from "next/link";
+import { useInterviewRole } from "@/app/store/useStore_Zustand";
+import { Input } from "@/components/ui/input";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,9 +27,17 @@ const inter = Inter({
 
 export default function UploadResumeDialog() {
   const [is_loading, set_is_loading] = useState(false);
+  const { setJobRole } = useInterviewRole();
+  const { setUser, user } = useInterviewRole();
 
   const handle_click = () => {
-    set_is_loading(!is_loading);
+    if (!user || user.length == 0) {
+      alert("Please enter the name of the user");
+      set_is_loading(false);
+    } else {
+      set_is_loading(true);
+      setJobRole("Frontend Developer");
+    }
   };
 
   return (
@@ -56,6 +66,17 @@ export default function UploadResumeDialog() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
+                <div className="m-2">
+                  <div className="text-white mb-2">
+                    Please enter your name here...
+                  </div>
+                  <Input
+                    type="text"
+                    className="text-white border-1 border-b-white"
+                    placeholder="Your name"
+                    onChange={(e) => setUser(e.target.value)}
+                  />
+                </div>
                 <div
                   className="border-dotted w-full h-full border-4 rounded-xl justify-center items-center flex hover:opacity-70 cursor-pointer"
                   onClick={() => alert("Feature awaited")}
@@ -80,21 +101,25 @@ export default function UploadResumeDialog() {
                     </div>
                   </DialogClose>
                   <div>
-                    <Link href={"/check_device?role=frontend%20developer"}>
-                      {!is_loading ? (
-                        <Button
-                          className="bg-white text-black hover:bg-gray-300"
-                          onClick={handle_click}
-                        >
-                          Proceed
-                        </Button>
-                      ) : (
-                        <Button disabled>
-                          <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-white border-solid"></span>
-                          Proceed
-                        </Button>
-                      )}
-                    </Link>
+                    {!user || user.length == 0 ? (
+                      <Button disabled>Proceed</Button>
+                    ) : (
+                      <Link href={"/check_device"}>
+                        {!is_loading ? (
+                          <Button
+                            className="bg-white text-black hover:bg-gray-300"
+                            onClick={handle_click}
+                          >
+                            Proceed
+                          </Button>
+                        ) : (
+                          <Button disabled>
+                            <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-white border-solid"></span>
+                            Proceed
+                          </Button>
+                        )}
+                      </Link>
+                    )}
                   </div>
                 </div>
               </CardContent>
