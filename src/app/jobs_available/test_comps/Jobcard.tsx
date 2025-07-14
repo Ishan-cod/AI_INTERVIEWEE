@@ -7,10 +7,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Divider } from "@heroui/react";
-import React, { lazy } from "react";
+import React from "react";
 import { Roboto_Mono, Inter, Roboto } from "next/font/google";
 import Interview_dialog from "./UploadResumeDialog";
-import { useRouter } from "next/navigation";
+
 
 const roboto = Roboto({
   subsets: ["latin"],
