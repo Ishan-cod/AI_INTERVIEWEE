@@ -15,7 +15,7 @@ import { Message_Container } from "./MessageBoxContainer";
 import { Scrollable_MSG_AREA } from "./ScrollableMessageArea";
 import axios, { AxiosError } from "axios";
 import { BaseMessage, SystemMessage } from "@langchain/core/messages";
-import { useSearchParams } from "next/navigation";
+
 import { speak } from "../../../utils/speak_text";
 import {
   useAIResponseStore,

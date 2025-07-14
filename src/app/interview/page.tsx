@@ -9,7 +9,7 @@ import { LanguageChanger } from "./components_tab/LanguageDropdown";
 import { Inter } from "next/font/google";
 import CodeEditor from "./components_tab/CodeEditor";
 
-import { useRouter, useSearchParams } from "next/navigation";
+
 
 import VideoBox from "./components_tab/VideoArea";
 import MessageBox from "./components_tab/MessageAreaHandler";
