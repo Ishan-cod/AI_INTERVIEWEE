@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Inter, Poppins, Roboto } from "next/font/google";
 import Recent_act from "./RecentActDiv";
 
 import User_profile_drpdwn from "./UserProfileDrpD";
 import { InfinityIcon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // My Dashboard
 // Jobs available
@@ -34,7 +36,7 @@ export default function Sidebar() {
         className={`w-full text-xl font-extrabold bg-gradient-to-r from-purple-500 via-blue-400 to-teal-300 bg-clip-text text-transparent flex ${poppins.className} p-2 items-center`}
       >
         <div>
-          <InfinityIcon className="text-white ml-2 mr-2" size={30}/>
+          <InfinityIcon className="text-white ml-2 mr-2" size={30} />
         </div>
         &lt;AI/&gt; <div className={`${poppins.className}`}>VUE</div>
       </div>
@@ -57,21 +59,29 @@ export default function Sidebar() {
             >
               My Dashboard
             </Button>
-            <Button
-              className={`bg-[#09090B] w-full m-0.5 mt-1.5 justify-start text-[14px] font-light hover:bg-[#212121] ${roboto.className} cursor-pointer`}
-            >
-              Jobs Available
-            </Button>
-            <Button
-              className={`bg-[#09090B] w-full m-0.5 mt-1.5 justify-start text-[14px] font-light hover:bg-[#212121] ${roboto.className} cursor-pointer`}
-            >
-              Interviews
-            </Button>
-            <Button
-              className={`bg-[#09090B] w-full m-0.5 mt-1.5 justify-start text-[14px] font-light hover:bg-[#212121] ${roboto.className} cursor-pointer`}
-            >
-              Recruit
-            </Button>
+
+            <Link href={"/jobs_available"}>
+              <Button
+                className={`bg-[#09090B] w-full m-0.5 mt-1.5 justify-start text-[14px] font-light hover:bg-[#212121] ${roboto.className} cursor-pointer`}
+              >
+                Jobs Available
+              </Button>
+            </Link>
+
+            <Link href={"/jobs_available"}>
+              <Button
+                className={`bg-[#09090B] w-full m-0.5 mt-1.5 justify-start text-[14px] font-light hover:bg-[#212121] ${roboto.className} cursor-pointer`}
+              >
+                Interviews
+              </Button>
+            </Link>
+            <Link href={"/job_posting"}>
+              <Button
+                className={`bg-[#09090B] w-full m-0.5 mt-1.5 justify-start text-[14px] font-light hover:bg-[#212121] ${roboto.className} cursor-pointer`}
+              >
+                Recruit
+              </Button>
+            </Link>
           </div>
           <div>
             <div className="m-2">
