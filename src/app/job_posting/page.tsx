@@ -10,7 +10,7 @@ import axios from "axios";
 import { CircleCheckBig, Clock, Clock2, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 
-export default function page() {
+export default function Page() {
   const initial_skillset: Array<string> = [
     "Communication",
     "Problem Solving",
