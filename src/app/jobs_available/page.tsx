@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Jobcard from "./test_comps/Jobcard";
 
 import { Inter } from "next/font/google";
@@ -8,6 +8,9 @@ import { Inter } from "next/font/google";
 import FilterButton from "./test_comps/Header_components/FilterButton";
 import Sidebar from "./test_comps/Sidebar";
 import MainBody from "./test_comps/MainBody";
+import axios from "axios";
+import Lottie from "lottie-react";
+import animation from "@/Animations/Infinity_loader.json";
 
 // Fonts
 const inter = Inter({
@@ -15,7 +18,48 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+interface JobResponseData {
+  _id: string;
+  job_title: string;
+  location: string;
+  salary: number;
+  skills_required: Array<string> | [];
+  company_name: string;
+  experience_required: string;
+  job_description: string;
+  created_at: string;
+  __v: number;
+}
+
+interface JobResponse {
+  success: boolean;
+  message: string;
+  data: Array<JobResponseData>;
+}
+
 export default function Page() {
+  const [AllJobs, setAllJobs] = useState<Array<JobResponseData>>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    setLoading(true);
+    const JobDetail = async () => {
+      try {
+        const response = await axios.get("/api/get_all_jobs");
+        const res_data: JobResponse = response.data;
+        if (response.status == 200) {
+          setAllJobs(res_data.data);
+          setLoading(false);
+          // console.log(res_data);
+        }
+      } catch (error) {
+        console.error("Cannot fetch job details");
+      }
+    };
+
+    JobDetail();
+  }, []);
+
   return (
     <div className="h-screen overflow-hidden">
       <div className="flex h-full">
@@ -37,17 +81,44 @@ export default function Page() {
           {/* NAVBAR */}
 
           {/* Job cards from DB TODO: */}
-          <div className="flex-1 overflow-auto hide-scrollbar px-4 py-2 space-y-2">
-            {[...Array(4)].map((_, i) => (
-              <div className="jobcard flex justify-center gap-4" key={i}>
-                <Jobcard />
-                <Jobcard />
-                <Jobcard />
+          {loading ? (
+            <div className=" p-2 flex items-center justify-center h-screen">
+              <Lottie
+                animationData={animation}
+                loop={true}
+                className="size-25"
+              />
+            </div>
+          ) : (
+            <div
+              className="overflow-auto scrollbar-none"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+              }}
+            >
+              <div
+                className="flex px-4 flex-wrap w-full justify-evenly break-words overflow-x-hidden"
+                role="list"
+              >
+                {AllJobs.map((job) => (
+                  <Jobcard
+                    key={job._id}
+                    job_title={job.job_title}
+                    company_name={job.company_name}
+                    job_description={job.job_description}
+                    country={"India"} // fallback
+                    location={job.location}
+                    salary={job.salary}
+                    skills_required={job.skills_required}
+                    experience_required={job.experience_required}
+                  />
+                ))}
               </div>
-            ))}
-          </div>
-          {/* Job cards from DB TODO: */}
+            </div>
+          )}
 
+          {/* Job cards from DB TODO: */}
         </MainBody>
         {/* Main Content */}
       </div>

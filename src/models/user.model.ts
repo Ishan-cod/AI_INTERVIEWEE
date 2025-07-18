@@ -2,7 +2,6 @@ import mongoose, { Schema, Document } from "mongoose";
 import { interview_interface } from "./interview.model";
 
 interface user_interface extends Document {
-  username: string;
   name: string;
   email: string;
   password: string;
@@ -13,12 +12,6 @@ interface user_interface extends Document {
 
 const user_schema: Schema<user_interface> = new Schema(
   {
-    username: {
-      type: String,
-      required: true,
-      lowercase: true,
-      trim: true,
-    },
     name: {
       type: String,
       required: true,

@@ -9,6 +9,7 @@ import User_profile_drpdwn from "./UserProfileDrpD";
 import { InfinityIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLoginStore, useSkillStore } from "@/app/store/useStore_Zustand";
 
 // My Dashboard
 // Jobs available
@@ -30,6 +31,8 @@ const roboto = Roboto({
 });
 
 export default function Sidebar() {
+  const { clearSkills } = useSkillStore();
+
   return (
     <div className="bg-[#09090B] w-[300px] h-full justify-center items-start text-amber-50">
       <div
@@ -78,6 +81,7 @@ export default function Sidebar() {
             <Link href={"/job_posting"}>
               <Button
                 className={`bg-[#09090B] w-full m-0.5 mt-1.5 justify-start text-[14px] font-light hover:bg-[#212121] ${roboto.className} cursor-pointer`}
+                onClick={() => clearSkills()}
               >
                 Recruit
               </Button>
@@ -89,16 +93,6 @@ export default function Sidebar() {
             </div>
             <div className="">
               <div className="m-2 text-sm text-white/50">Recent</div>
-              <Recent_act />
-              <Recent_act />
-              <Recent_act />
-              <Recent_act />
-              <Recent_act />
-              <Recent_act />
-              <Recent_act />
-              <Recent_act />
-              <Recent_act />
-              <Recent_act />
               <Recent_act />
               <Recent_act />
               <Recent_act />

@@ -29,7 +29,7 @@ export async function GET() {
     {
       success: true,
       message: "Jobs fetched successfully",
-      data: { all_jobs },
+      data: all_jobs,
     },
     { status: 200 }
   );

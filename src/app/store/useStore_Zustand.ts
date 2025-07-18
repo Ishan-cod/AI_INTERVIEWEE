@@ -27,6 +27,18 @@ type InterviewRole = {
   setJobRole: (jobRole: string) => void;
 };
 
+type LoginHandler = {
+  name: string;
+  setName: (name: string) => void;
+};
+
+type SkillHandler = {
+  skills_Array: Array<string>;
+  setSkills: (skill: string) => void;
+  unsetSkills: (skill: string) => void;
+  clearSkills: () => void;
+};
+
 export const useVideoStore = create<VideoStore>((set) => ({
   isVideo: false,
   toggleVideo: () => {
@@ -63,5 +75,31 @@ export const useInterviewRole = create<InterviewRole>((set) => ({
   job_role: "",
   setJobRole: (jobRole: string) => {
     set(() => ({ job_role: jobRole }));
+  },
+}));
+
+export const useLoginStore = create<LoginHandler>((set) => ({
+  name: "",
+  setName: (name: string) => {
+    set(() => ({ name: name }));
+  },
+}));
+
+export const useSkillStore = create<SkillHandler>((set) => ({
+  skills_Array: [],
+  setSkills: (skill: string) => {
+    set((state) => ({
+      skills_Array: [...state.skills_Array, skill],
+    }));
+  },
+  unsetSkills: (skill: string) => {
+    set((state) => ({
+      skills_Array: state.skills_Array.filter((i) => i !== skill),
+    }));
+  },
+  clearSkills: () => {
+    set(() => ({
+      skills_Array: [],
+    }));
   },
 }));

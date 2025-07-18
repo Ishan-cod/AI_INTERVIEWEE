@@ -3,8 +3,11 @@ import { Card } from "@/components/ui/card";
 import { User } from "lucide-react";
 import React from "react";
 import UserProfileDrpMenuContent from "./UserProfileDrpMenuContent";
+import { useLoginStore } from "@/app/store/useStore_Zustand";
 
 export default function UserProfileDrpMenu() {
+  const { name } = useLoginStore();
+
   return (
     // Profile name section
     <Card className="p-0.5 bg-[linear-gradient(145deg,_#1e1e1e,_#2a2a2a)] border-0">
@@ -18,7 +21,7 @@ export default function UserProfileDrpMenu() {
               <div className="">
                 <div className="justify-items-start items-center">
                   <div className="font-semibold mb-0 text-[#f9fafb]">
-                    Ishan Jaiswal
+                    {name}
                   </div>
                   <div className="text-xs mt-0 text-[#9ca3af]">User</div>
                 </div>

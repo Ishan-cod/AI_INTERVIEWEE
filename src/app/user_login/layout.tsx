@@ -1,3 +1,5 @@
+import { Toaster } from "sonner";
+
 export default function DashboardLayout({
   children,
 }: {
@@ -6,6 +8,7 @@ export default function DashboardLayout({
   return (
     <body>
       <main>{children}</main>
+      <Toaster />
     </body>
   );
 }
