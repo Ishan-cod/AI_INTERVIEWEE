@@ -1,8 +1,10 @@
+import { useLoginStore } from "@/app/store/useStore_Zustand";
 import { Card } from "@/components/ui/card";
 import { ChevronDown, User } from "lucide-react";
 import React from "react";
 
 export default function ProfileCard() {
+  const { name } = useLoginStore();
   return (
     <Card className="bg-[#212121] rounded-lg h-12 justify-center border-0">
       <div className="flex justify-between items-center">
@@ -12,7 +14,7 @@ export default function ProfileCard() {
           </div>
           <div className="">
             <div className="justify-items-start items-center">
-              <div className="font-semibold mb-0 text-white">Ishan Jaiswal</div>
+              <div className="font-semibold mb-0 text-white">{name}</div>
               <div className="text-xs mt-0 text-white/70">User</div>
             </div>
           </div>

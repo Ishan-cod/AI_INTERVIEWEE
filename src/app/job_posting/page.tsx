@@ -7,8 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import SkillTag from "./components.job/SkillTag";
 import axios from "axios";
-import { CircleCheckBig, Clock, Clock2, Loader2, X } from "lucide-react";
+import { CircleCheckBig, Clock, Loader2, X, XCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useSkillStore } from "../store/useStore_Zustand";
 
 export default function Page() {
   const initial_skillset: Array<string> = [
@@ -31,42 +32,33 @@ export default function Page() {
   const [Salary, setSalary] = useState<number>(0);
   const [city, setCity] = useState<string>("");
   const [Company, setCompany] = useState<string>("");
-  const [skills, setSkills] = useState<Array<string>>(initial_skillset);
+  const [skills, setSkillArr] = useState<Array<string>>(initial_skillset);
   const [Experience, setExperience] = useState<string>("0");
   const [JobDesc, setJobDesc] = useState<string>("");
-  const [SelectedSkills, setSelectedSkills] = useState<Array<string>>([]);
   const [isLoading, setisLoading] = useState<boolean>(false);
-  const [CreationSuccess, setCreationSuccess] = useState<boolean>();
+  const [add_skill, set_add_skill] = useState<string>("");
+  const { skills_Array, setSkills } = useSkillStore();
 
   const handleblur = async () => {
-    const response: any = await axios.post(
-      "/api/artificial_int/skill_suggest",
-      {
-        job_role: JobTitle,
-      }
-    );
+    try {
+      const response: any = await axios.post(
+        "/api/artificial_int/skill_suggest",
+        {
+          job_role: JobTitle,
+        }
+      );
 
-    if (response.status == 200) {
-      const array_res = response.data.Skillset.skills;
-      setSkills(array_res);
-      console.log("ARRAY CHANGED");
-    } else {
-      console.log("Error occured");
+      const array = response.data.Skillset.skills;
+      if (!array || array.length === 0) {
+        console.error("Cannot fetch details");
+      } else {
+        setSkillArr(array);
+      }
+    } catch (e: any) {
+      console.log(e.response);
     }
   };
 
-  const test_handler = () => {
-    toast(<span>Job creation in Process</span>, {
-      icon: <Clock className="animate-spin" />,
-      description: (
-        <>
-          <div className="text-sm text-zinc-500 leading-relaxed">
-            Please wait while we create a job posting
-          </div>
-        </>
-      ),
-    });
-  };
   const handleSubmit = async () => {
     setisLoading(true);
 
@@ -107,7 +99,7 @@ export default function Page() {
           location: city,
           country: "India",
           salary: Salary,
-          skills_required: SelectedSkills,
+          skills_required: skills_Array,
           company_name: Company,
 
           experience_required: Experience,
@@ -116,7 +108,6 @@ export default function Page() {
 
         if (response.status == 200) {
           setisLoading(false);
-          setCreationSuccess(true);
 
           toast(<span>Job Posting created successfully</span>, {
             icon: <CircleCheckBig className="animate-bounce text-green-500" />,
@@ -135,7 +126,23 @@ export default function Page() {
           });
         } else {
           setisLoading(false);
-          setCreationSuccess(false);
+
+          toast(
+            <span className="font-semibold text-red-600">
+              Job Creation Failed
+            </span>,
+            {
+              icon: <XCircle className="text-red-500" />,
+              description: (
+                <div className="text-sm text-gray-700 mt-1 space-y-1">
+                  <div>We couldn’t create your job post.</div>
+                  <div>Please try again or check your internet connection.</div>
+                </div>
+              ),
+              duration: 6000,
+              className: "bg-white border border-gray-200 rounded-xl shadow-md",
+            }
+          );
           console.log(response.data.message);
         }
       } catch (error) {
@@ -243,7 +250,12 @@ export default function Page() {
               </div>
               <div>
                 <div className="text-white">Skills Required</div>
-                <Input className="text-white border-0 bg-[#2b2b2b]" />
+                <Input
+                  className="text-white border-0 bg-[#2b2b2b]"
+                  placeholder="Select skills"
+                  readOnly
+                  value={skills_Array.join(", ")}
+                />
               </div>
 
               <div className="flex flex-wrap w-full overflow-x-hidden break-words justify-between">
@@ -252,11 +264,41 @@ export default function Page() {
                 ))}
               </div>
 
+              <div className="text-white mt-3">Any other Skills</div>
+              <div className="flex items-center justify-center">
+                <Input
+                  className="text-white border-0 bg-[#2b2b2b]"
+                  type="text"
+                  placeholder="Additional skills here"
+                  value={add_skill}
+                  onChange={(e) => set_add_skill(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key == "Enter") {
+                      if (add_skill !== "") {
+                        setSkills(add_skill.trim());
+                        set_add_skill("");
+                      }
+                    }
+                  }}
+                />
+                <Button
+                  className="text-black bg-white/85 m-2 hover:scale-105 hover:bg-white"
+                  onClick={() => {
+                    if (add_skill !== "") {
+                      setSkills(add_skill.trim());
+                      set_add_skill("");
+                    }
+                  }}
+                >
+                  Add
+                </Button>
+              </div>
+
               <div className="flex items-center justify-end mt-2 pt-2">
                 {!isLoading ? (
                   <Button
                     className="rounded-sm hover:scale-110 hover:cursor-pointer bg-white/90 text-black text-md hover:bg-white/90 ml-3"
-                    onClick={test_handler}
+                    onClick={handleSubmit}
                   >
                     Post Job
                   </Button>

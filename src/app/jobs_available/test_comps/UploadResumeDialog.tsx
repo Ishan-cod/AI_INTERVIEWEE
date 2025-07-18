@@ -25,7 +25,13 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-export default function UploadResumeDialog() {
+export default function UploadResumeDialog({
+  job_role,
+  company,
+}: {
+  job_role: string;
+  company: string;
+}) {
   const [is_loading, set_is_loading] = useState(false);
   const { setJobRole } = useInterviewRole();
   const { setUser, user } = useInterviewRole();
@@ -36,7 +42,7 @@ export default function UploadResumeDialog() {
       set_is_loading(false);
     } else {
       set_is_loading(true);
-      setJobRole("Frontend Developer");
+      setJobRole(job_role);
     }
   };
 
@@ -55,13 +61,13 @@ export default function UploadResumeDialog() {
               <CardHeader>
                 <CardTitle>
                   <div className="text-white">
-                    Applying for Role of Frontend Developer
+                    Applying for Role of {job_role}
                   </div>
                 </CardTitle>
                 <CardDescription>
                   <div className="text-white opacity-60">
                     Please provide the following details to apply for the role
-                    in ABC company
+                    in {company}
                   </div>
                 </CardDescription>
               </CardHeader>

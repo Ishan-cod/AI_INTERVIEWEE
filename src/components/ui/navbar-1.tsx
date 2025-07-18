@@ -32,7 +32,7 @@ const FloatingNavbar = () => {
           Github
         </Button>
       </Link>
-      <Link href={"/jobs_available"}>
+      <Link href={"/user_login"}>
         {!isLoading ? (
           <Button
             onClick={() => setisLoading(!isLoading)}
