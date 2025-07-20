@@ -1,10 +1,29 @@
 import { useLoginStore } from "@/app/store/useStore_Zustand";
 import { Card } from "@/components/ui/card";
+import axios from "axios";
 import { ChevronDown, User } from "lucide-react";
-import React from "react";
+import { redirect } from "next/navigation";
+import React, { useEffect } from "react";
 
 export default function ProfileCard() {
-  const { name } = useLoginStore();
+  const { name ,setName} = useLoginStore();
+
+  //TODO: Uncomment this 
+  
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const response = await axios.get("/api/auth/check_cookie");
+        const username = response.data.token.username;
+        setName(username);
+      } catch (error) {
+        redirect("/user_login");
+      }
+    };
+
+    checkToken();
+  }, []);
+
   return (
     <Card className="bg-[#212121] rounded-lg h-12 justify-center border-0">
       <div className="flex justify-between items-center">

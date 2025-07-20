@@ -6,6 +6,7 @@ import {
   CircleCheckBig,
   Clock,
   Github,
+  Loader2,
   LoaderCircle,
   MailCheck,
   UserCheck2,
@@ -13,9 +14,11 @@ import {
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useLoginStore } from "../store/useStore_Zustand";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
+import { NeonGradientCard } from "@/components/magicui/neon-gradient-card";
+import Link from "next/link";
 
 export default function Page() {
   const [allfiled, setallfiled] = useState<boolean>(false);
@@ -23,6 +26,7 @@ export default function Page() {
   const [password, setPassword] = useState<string>("");
   const { name, setName } = useLoginStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [toLogin, settoLogin] = useState<boolean>(false);
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -110,90 +114,115 @@ export default function Page() {
   return (
     <>
       <div className="flex items-center justify-center h-screen bg-gradient-to-r from-zinc-900 to-zinc-800">
-        <div className="w-full max-w-sm p-6 bg-zinc-900 rounded-xl shadow-lg space-y-6">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-white">Create an account</h1>
-            <p className="text-sm text-zinc-400 mt-1">
-              Enter your email below to create your account
-            </p>
-          </div>
+        <NeonGradientCard className="w-full max-w-sm bg-zinc-900 rounded-xl shadow-lg space-y-6 h-auto">
+          <div className="p-3">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-white">
+                Create an account
+              </h1>
+              <p className="text-sm text-zinc-400 mt-1">
+                Enter your email below to create your account
+              </p>
+            </div>
 
-          <div className="space-y-3">
+            {/* <div className="space-y-3">
             <Button variant="outline" className="w-full flex gap-2">
               <Github className="w-4 h-4" /> GitHub
             </Button>
             <Button variant="outline" className="w-full flex gap-2">
               <MailCheck className="w-4 h-4" /> Google
             </Button>
-          </div>
+          </div> */}
 
-          <div className="relative">
+            {/* <div className="relative">
             <Separator className="bg-zinc-700" />
             <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-xs text-zinc-500 bg-zinc-900 px-2">
               OR CONTINUE WITH
             </span>
-          </div>
+          </div> */}
 
-          <div className="space-y-2">
-            <label className="text-sm text-zinc-300" htmlFor="email">
-              Name
-            </label>
-            <Input
-              type="text"
-              id="name"
-              placeholder="Name"
-              className="bg-zinc-800 text-white border-zinc-700"
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
+            <div className="w-full ">
+              <div className="flex items-center justify-around w-full my-2">
+                <div className="border-b-2 text-white p-3 rounded-lg">
+                  SIGNUP
+                </div>
 
-          <div className="space-y-2">
-            <label className="text-sm text-zinc-300" htmlFor="email">
-              Email
-            </label>
-            <Input
-              type="email"
-              id="email"
-              placeholder="example@example.com"
-              className="bg-zinc-800 text-white border-zinc-700"
-              onChange={(e) => setEmail(e.target.value)}
-            />
+                <Link href={'/signin'}>
+                <div className="text-white/50 hover:text-white hover:cursor-pointer p-3 hover:border-b-2 rounded-lg" onClick={() => settoLogin(true)}>
+                  {toLogin ? (
+                    <>
+                      <Loader2 className="animate-spin" />
+                    </>
+                  ) : (
+                    <>LOGIN</>
+                  )}
+                </div></Link>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm text-zinc-300" htmlFor="email">
+                Name
+              </label>
+              <Input
+                type="text"
+                id="name"
+                placeholder="Name"
+                className="bg-zinc-800 text-white border-zinc-700"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm text-zinc-300" htmlFor="email">
+                Email
+              </label>
+              <Input
+                type="email"
+                id="email"
+                placeholder="example@example.com"
+                className="bg-zinc-800 text-white border-zinc-700"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm text-zinc-300" htmlFor="password">
+                Password
+              </label>
+              <Input
+                type="password"
+                id="password"
+                placeholder="••••••••"
+                className="bg-zinc-800 text-white border-zinc-700"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="mt-5  ">
+              {!isLoading && allfiled ? (
+                <Button
+                  type="submit"
+                  className="w-full bg-white/90 text-black hover:scale-105 hover:bg-white/80"
+                  onClick={handleSubmit}
+                >
+                  Create account
+                </Button>
+              ) : !allfiled && !isLoading ? (
+                <Button type="submit" className="w-full" disabled>
+                  Create account
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  className="w-full bg-white/90 text-black scale-105"
+                  disabled
+                >
+                  <LoaderCircle className="animate-spin" />
+                  <div>Creating ...</div>
+                </Button>
+              )}
+            </div>
           </div>
-          <div className="space-y-2">
-            <label className="text-sm text-zinc-300" htmlFor="password">
-              Password
-            </label>
-            <Input
-              type="password"
-              id="password"
-              placeholder="••••••••"
-              className="bg-zinc-800 text-white border-zinc-700"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          {!isLoading && allfiled ? (
-            <Button
-              type="submit"
-              className="w-full bg-white/90 text-black hover:scale-105 hover:bg-white/80"
-              onClick={handleSubmit}
-            >
-              Create account
-            </Button>
-          ) : !allfiled && !isLoading ? (
-            <Button type="submit" className="w-full" disabled>
-              Create account
-            </Button>
-          ) : (
-            <Button
-              type="submit"
-              className="w-full bg-white/90 text-black scale-105"
-              disabled
-            >
-              <LoaderCircle className="animate-spin" />
-              <div>Creating ...</div>
-            </Button>
-          )}
-        </div>
+        </NeonGradientCard>
       </div>
     </>
   );
