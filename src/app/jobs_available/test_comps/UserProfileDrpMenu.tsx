@@ -1,9 +1,10 @@
 import { Card } from "@/components/ui/card";
 
 import { User } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import UserProfileDrpMenuContent from "./UserProfileDrpMenuContent";
 import { useLoginStore } from "@/app/store/useStore_Zustand";
+
 
 export default function UserProfileDrpMenu() {
   const { name } = useLoginStore();

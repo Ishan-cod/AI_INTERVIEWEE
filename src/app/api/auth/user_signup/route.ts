@@ -80,7 +80,7 @@ export async function POST(request: Request) {
     );
   } else {
     (await cookies()).set({
-      name: "token",
+      name: "auth_token",
       value: token,
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
