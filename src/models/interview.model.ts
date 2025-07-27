@@ -1,10 +1,10 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { performance_interface } from "./performance.model";
+import { PerformanceInterface } from "./performance.model";
 import { job_interface } from "./job.model";
 
 export interface interview_interface extends Document {
   job_applied: mongoose.Types.ObjectId | job_interface;
-  performance: mongoose.Types.ObjectId | performance_interface;
+  performance: mongoose.Types.ObjectId | PerformanceInterface;
 }
 
 const interview_schema: Schema<interview_interface> = new Schema(

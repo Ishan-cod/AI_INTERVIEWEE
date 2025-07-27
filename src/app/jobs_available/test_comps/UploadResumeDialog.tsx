@@ -19,6 +19,8 @@ import { CloudUpload } from "lucide-react";
 import Link from "next/link";
 import { useInterviewRole } from "@/app/store/useStore_Zustand";
 import { Input } from "@/components/ui/input";
+import axios from "axios";
+import { redirect } from "next/navigation";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,21 +30,31 @@ const inter = Inter({
 export default function UploadResumeDialog({
   job_role,
   company,
+  job_id,
 }: {
   job_role: string;
   company: string;
+  job_id: string;
 }) {
   const [is_loading, set_is_loading] = useState(false);
   const { setJobRole } = useInterviewRole();
   const { setUser, user } = useInterviewRole();
 
-  const handle_click = () => {
+  const handle_click = async () => {
     if (!user || user.length == 0) {
       alert("Please enter the name of the user");
       set_is_loading(false);
     } else {
       set_is_loading(true);
       setJobRole(job_role);
+      try {
+        await axios.post("/api/set_cookie_job", {
+          job_id: job_id,
+        });
+      } catch (error) {
+        alert("ERROR");
+        redirect("/jobs_available");
+      }
     }
   };
 

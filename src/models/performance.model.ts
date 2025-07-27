@@ -1,36 +1,60 @@
 import mongoose, { Schema, Document } from "mongoose";
 
- export interface performance_interface extends Document {
+interface PerFeedbackType {
+  question: string;
+  feedback: string;
+  topic: string;
   score: number;
-  review: string;
-  strength_area: [string];
 }
 
-const performance_schema: Schema<performance_interface> = new Schema(
+export interface PerformanceInterface extends Document {
+  overall_score: number;
+  hireable: boolean;
+  question_feedback: PerFeedbackType[];
+  strengths: StrengthType[]; // ← changed from string[]
+  action_items: string[];
+  concluding_statement: string;
+}
+
+interface StrengthType {
+  topic: string;
+  detail: string;
+}
+
+const StrengthSchema: Schema<StrengthType> = new Schema(
   {
-    score: {
-      type: Number,
-      required: true,
-    },
-    review: {
-      type: String,
-      required: true,
-    },
-    strength_area: {
-      type: [String],
-      required: true,
-    },
+    topic: { type: String, required: true },
+    detail: { type: String, required: true },
+  },
+  { _id: false }
+);
+
+const PerFeedbackSchema: Schema<PerFeedbackType> = new Schema(
+  {
+    question: { type: String, required: true },
+    feedback: { type: String, required: true },
+    topic: { type: String, required: true },
+    score: { type: Number, required: true },
+  },
+  { _id: false }
+);
+
+const PerformanceSchema: Schema<PerformanceInterface> = new Schema(
+  {
+    overall_score: { type: Number, required: true },
+    hireable: { type: Boolean, required: true },
+    question_feedback: { type: [PerFeedbackSchema], required: true },
+    strengths: { type: [StrengthSchema], required: true }, // ← FIXED
+    action_items: { type: [String], required: true },
+    concluding_statement: { type: String, required: true },
   },
   {
-    timestamps: {
-      createdAt: true,
-      updatedAt: true,
-    },
+    timestamps: true,
   }
 );
 
-const performance_model =
-  (mongoose.models.Performance_model as mongoose.Model<performance_interface>) ||
-  mongoose.model<performance_interface>("Performance_model", performance_schema);
+const PerformanceModel =
+  (mongoose.models.PerformanceModel as mongoose.Model<PerformanceInterface>) ||
+  mongoose.model<PerformanceInterface>("PerformanceModel", PerformanceSchema);
 
-export { performance_model };
+export { PerformanceModel };

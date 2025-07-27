@@ -1,6 +1,10 @@
 import { useSpeechToText } from "@/app/interview/components_tab/CHAT/SpeechToTextHook";
-import { useVideoStore } from "@/app/store/useStore_Zustand";
+import {
+  useTranscriptStore,
+  useVideoStore,
+} from "@/app/store/useStore_Zustand";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 import {
   LucidePhoneCall,
   Menu,
@@ -10,11 +14,33 @@ import {
   Video,
   VideoOff,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function CallBar() {
   const video = useVideoStore((state) => state.isVideo);
+  const { transscpt } = useTranscriptStore();
   const toggle_video = useVideoStore((state) => state.toggleVideo);
+  const router = useRouter();
+
+  const handleCallEnd = async () => {
+    try {
+      const interviewres = await axios.post(
+        "/api/artificial_int/interview_result",
+        {
+          transcript: transscpt,
+        }
+      );
+
+      const response = await axios.post("/api/save_result", {
+        result: interviewres.data.result,
+      });
+
+      router.push(`/result?rid=${response.data.result_id}`);
+    } catch (error) {
+      alert("Error occured");
+    }
+  };
 
   const { isListening, start, stop, transcript } = useSpeechToText(
     "en-IN",
@@ -52,7 +78,7 @@ export default function CallBar() {
         {video ? <Video /> : <VideoOff />}
       </Button>
 
-      <Button className="bg-red-700 hover:bg-red-800">
+      <Button className="bg-red-700 hover:bg-red-800" onClick={handleCallEnd}>
         <LucidePhoneCall />
       </Button>
 

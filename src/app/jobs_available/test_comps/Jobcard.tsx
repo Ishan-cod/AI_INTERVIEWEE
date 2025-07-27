@@ -27,6 +27,7 @@ const inter = Inter({
 });
 
 interface jobcard {
+  job_id: string;
   job_title: string;
   location: string;
   country: string;
@@ -66,6 +67,7 @@ function Jobcard(props: jobcard) {
             <Interview_dialog
               job_role={props.job_title}
               company={props.company_name}
+              job_id={props.job_id}
             />
           </div>
         </CardFooter>

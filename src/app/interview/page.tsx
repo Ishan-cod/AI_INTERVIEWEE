@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
 import Sidebar from "../jobs_available/test_comps/Sidebar";
 import MainBody from "../jobs_available/test_comps/MainBody";
 
@@ -8,8 +8,6 @@ import { SquareCheckBig } from "lucide-react";
 import { LanguageChanger } from "./components_tab/LanguageDropdown";
 import { Inter } from "next/font/google";
 import CodeEditor from "./components_tab/CodeEditor";
-
-
 
 import VideoBox from "./components_tab/VideoArea";
 import MessageBox from "./components_tab/MessageAreaHandler";
@@ -37,9 +35,9 @@ int main()
 }`,
 
     java: `public class Main {
-    public static void main(String[] args) {
-        // Your code starts here
-        System.out.println("Hello, World!");
+  public static void main(String[] args) {
+  // Your code starts here
+  System.out.println("Hello, World!");
     }
 }
 `,

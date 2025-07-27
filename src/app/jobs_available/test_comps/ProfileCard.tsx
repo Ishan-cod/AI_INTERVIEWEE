@@ -6,10 +6,10 @@ import { redirect } from "next/navigation";
 import React, { useEffect } from "react";
 
 export default function ProfileCard() {
-  const { name ,setName} = useLoginStore();
+  const { name, setName } = useLoginStore();
 
-  //TODO: Uncomment this 
-  
+  //TODO: Uncomment this
+
   useEffect(() => {
     const checkToken = async () => {
       try {

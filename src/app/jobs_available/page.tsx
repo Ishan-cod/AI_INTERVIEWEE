@@ -1,16 +1,13 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
-import Jobcard from "./test_comps/Jobcard";
-
 import { Inter } from "next/font/google";
-
+import Jobcard from "./test_comps/Jobcard";
 import FilterButton from "./test_comps/Header_components/FilterButton";
 import Sidebar from "./test_comps/Sidebar";
 import MainBody from "./test_comps/MainBody";
 import axios from "axios";
 import Lottie from "lottie-react";
-import animation from "@/Animations/Infinity_loader.json";
+import animation from "@/Animations/Infinity animation.json";
 
 // Fonts
 const inter = Inter({
@@ -32,8 +29,6 @@ interface JobResponseData {
 }
 
 interface JobResponse {
-  success: boolean;
-  message: string;
   data: Array<JobResponseData>;
 }
 
@@ -50,7 +45,6 @@ export default function Page() {
         if (response.status == 200) {
           setAllJobs(res_data.data);
           setLoading(false);
-          // console.log(res_data);
         }
       } catch (error) {
         console.error("Cannot fetch job details");
@@ -80,13 +74,13 @@ export default function Page() {
 
           {/* NAVBAR */}
 
-          {/* Job cards from DB TODO: */}
+          {/*Job cards from DB*/}
           {loading ? (
             <div className=" p-2 flex items-center justify-center h-screen">
               <Lottie
                 animationData={animation}
                 loop={true}
-                className="size-25"
+                className="size-50"
               />
             </div>
           ) : (
@@ -104,6 +98,7 @@ export default function Page() {
                 {AllJobs.map((job) => (
                   <Jobcard
                     key={job._id}
+                    job_id={job._id}
                     job_title={job.job_title}
                     company_name={job.company_name}
                     job_description={job.job_description}
@@ -118,7 +113,7 @@ export default function Page() {
             </div>
           )}
 
-          {/* Job cards from DB TODO: */}
+          {/* Job cards from DB*/}
         </MainBody>
         {/* Main Content */}
       </div>

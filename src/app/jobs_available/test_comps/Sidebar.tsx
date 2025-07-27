@@ -14,10 +14,6 @@ import { useLoginStore, useSkillStore } from "@/app/store/useStore_Zustand";
 // My Dashboard
 // Jobs available
 // Interview secion
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
 
 const poppins = Poppins({
   subsets: ["latin"],
