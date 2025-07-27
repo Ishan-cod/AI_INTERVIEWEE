@@ -20,6 +20,7 @@ import { speak } from "../../../utils/speak_text";
 import {
   useAIResponseStore,
   useInterviewRole,
+  useTranscriptStore,
 } from "@/app/store/useStore_Zustand";
 
 // Interface defination
@@ -92,6 +93,7 @@ const useApiCall = () => {
 
 export default function Message_BOX() {
   const { user, job_role } = useInterviewRole();
+  const { updateTranscript } = useTranscriptStore();
   const interviewee = user;
   const jobRole = job_role;
 
@@ -112,6 +114,11 @@ export default function Message_BOX() {
   const { isSpeaking, speakText } = useSpeech();
   const { isLoading, makeApiCall } = useApiCall();
   const hasInitialized = useRef(false);
+
+  // DEBUG::
+  // useEffect(() => {
+  //   console.log(transcript);
+  // }, [transcript]);
 
   // Memoized computed values
   const isInputDisabled = useMemo(() => {
@@ -140,6 +147,7 @@ export default function Message_BOX() {
         id: generateMessageId(),
       };
       setMessages((prev) => [...prev, newMessage]);
+      updateTranscript(sender, content);
       return newMessage;
     },
     [generateMessageId]

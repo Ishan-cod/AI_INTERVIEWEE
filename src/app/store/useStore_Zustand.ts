@@ -1,3 +1,4 @@
+import { BaseMessage } from "@langchain/core/messages";
 import { create } from "zustand";
 
 type VideoStore = {
@@ -37,6 +38,11 @@ type SkillHandler = {
   setSkills: (skill: string) => void;
   unsetSkills: (skill: string) => void;
   clearSkills: () => void;
+};
+
+type InterviewTranscript = {
+  transscpt: Array<{ sender: "ai" | "human"; content: string }>;
+  updateTranscript: (sender: "ai" | "human", content: string) => void;
 };
 
 export const useVideoStore = create<VideoStore>((set) => ({
@@ -101,5 +107,21 @@ export const useSkillStore = create<SkillHandler>((set) => ({
     set(() => ({
       skills_Array: [],
     }));
+  },
+}));
+
+export const useTranscriptStore = create<InterviewTranscript>((set) => ({
+  transscpt: [],
+  updateTranscript: (sender: "ai" | "human", content: string) => {
+    sender == "ai"
+      ? set((state) => ({
+          transscpt: [...state.transscpt, { sender: "ai", content: content }],
+        }))
+      : set((state) => ({
+          transscpt: [
+            ...state.transscpt,
+            { sender: "human", content: content },
+          ],
+        }));
   },
 }));

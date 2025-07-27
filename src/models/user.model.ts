@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { interview_interface } from "./interview.model";
 
-interface user_interface extends Document {
+export interface user_interface extends Document {
   name: string;
   email: string;
   password: string;

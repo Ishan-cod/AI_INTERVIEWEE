@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-function verifyToken(token: string) {
+export function verifyToken(token: string) {
   if (typeof token !== "string") {
     return "";
   }
