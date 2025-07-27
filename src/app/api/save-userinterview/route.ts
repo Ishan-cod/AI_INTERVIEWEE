@@ -1,7 +1,8 @@
 import { cookies } from "next/headers";
-import { verifyToken } from "../auth/check_cookie/route";
+// import { verifyToken } from "../auth/check_cookie/route";
 import { UserModel } from "@/models/user.model";
 import mongoose from "mongoose";
+import { verifyToken } from "../auth/check_cookie";
 
 type requestType = {
   Interview_id: mongoose.Types.ObjectId;

@@ -1,10 +1,11 @@
 import dbConnect from "@/utils/db_connect";
 import { cookies } from "next/headers";
-import { verifyToken } from "../auth/check_cookie/route";
+// import { verifyToken } from "../auth/check_cookie/route";
 import { UserModel } from "@/models/user.model";
 import mongoose from "mongoose";
 import { interview_interface, interview_model } from "@/models/interview.model";
 import { job_model } from "@/models/job.model";
+import { verifyToken } from "../auth/check_cookie";
 
 export async function GET() {
   await dbConnect();

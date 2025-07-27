@@ -18,7 +18,7 @@ export function ActionArea(prop: prop) {
           <div className="bg-zinc-800 py-2 px-1 rounded-lg my-1 font-sans h-full text-white/80">
             <div className="p-1">
               {prop.actionItems?.map((item, key) => (
-                <div className="my-1">
+                <div className="my-1" key={key}>
                   {key + 1}: {item}
                 </div>
               ))}

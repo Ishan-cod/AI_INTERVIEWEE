@@ -18,7 +18,7 @@ export function QuestionAccordian(prop: prop) {
     <>
       <Accordion type="single" collapsible>
         {prop.questions?.map((questObj, key) => (
-          <AccordionItem value={key.toString()}>
+          <AccordionItem value={key.toString()} key={key}>
             <AccordionTrigger>
               <div className="flex justify-between w-full">
                 <div className="text-md text-white/75 font-sans">

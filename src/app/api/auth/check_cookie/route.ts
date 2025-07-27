@@ -1,14 +1,8 @@
-import jwt from "jsonwebtoken";
+
 import { cookies } from "next/headers";
+import { verifyToken } from "../check_cookie";
 
-export function verifyToken(token: string) {
-  if (typeof token !== "string") {
-    return "";
-  }
-  const token_detail = jwt.verify(token, process.env.JWT_SECRET as string);
 
-  return token_detail;
-}
 
 export async function GET() {
   const token = (await cookies()).get("auth_token")?.value;
@@ -38,6 +32,8 @@ export async function GET() {
 
   return Response.json(
     {
+      success: true,
+      message: "Token fetched successfully",
       token: tokenDetail,
     },
     { status: 200 }
