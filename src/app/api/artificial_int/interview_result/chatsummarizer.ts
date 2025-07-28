@@ -12,30 +12,28 @@ export async function InterviewResultGeneration(
   }
 
   const prompt =
-    ChatPromptTemplate.fromTemplate(`You're an expert tech interviewer. Assess the human's technical skills from this AI-human interview transcript.
+    ChatPromptTemplate.fromTemplate(`You are a expert transcript analyser, your task is to analyse the transcript provided and provide the mentioned results.
 
-**Key Guidelines:**
-- Score what was demonstrated, not what's missing
-- Give partial credit for incomplete but reasonable attempts
-- Consider effort and reasoning process even in wrong answers
-- Differentiate "doesn't know" from "knows but explains poorly"
+Transcript: {transcript}
 
-**Scoring:** 8-10 (strong), 5-7 (adequate), 2-4 (weak but some understanding), 0-1 (no understanding shown)
+RULES:
+1. DONOT PROVIDE ANY OTHER INFORMATION APART FROM MENTIONED ONES.
+2. BE SIMPLE WITH WORDS AND BE LENIENT
+3. TRY TO PROVIDE CRISP AND SHORT REVIEWS
+4. GIVE SCORES OPENLY (i.e try not to deduct much score make user happy)
+5. GIVE RESPONSE ONLY IN JSON FORMAT AS SHOWN
+6. TRY TO EXTRACT ALL THE QUESTIONS ASKED AND SEPERATE THEM THEN GIVE RESPONSE.
 
-Return **only valid JSON**:
-
-Here is the transcript:
-{transcript}
-
+RESULT FORMAT:
 {{
-  "overall_score": 0–100,
+  "overall_score": 0-100,
   "hireable": true|false,
   "question_feedback": [
     {{
       "question": "<AI's question>",
       "feedback": "<what they demonstrated + key gap>",
       "topic": "<technical area>",
-      "score": 0–10
+      "score": 0-10
     }}
   ],
   "strengths": [
@@ -46,11 +44,10 @@ Here is the transcript:
     "<specific study recommendation>",
     "<practice suggestion>",
     "<skill to develop>"
+    ...
   ],
-  "concluding_statement": "<hire/no-hire with brief reasoning>"
-    }}
-  
-  NOTE : PLEASE DONOT LEAVE ANY FIELD BLANK IF USER HAS NO STRENGTH STILL WRITE SOMETHING`);
+  "concluding_statement": "brief conclusion of interview>"
+}}`);
 
   try {
     const chain = prompt.pipe(model);

@@ -77,11 +77,11 @@ export async function POST(request: Request) {
 
     return Response.json(
       {
-        success: true,
+        success: false,
         message: "Interview details saved successfully",
-        interview_id: newInterview._id,
+        // interview_id: newInterview._id,
       },
-      { status: 200 }
+      { status: 409 }
     );
   } catch (error) {
     return Response.json(
