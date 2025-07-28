@@ -11,63 +11,75 @@ export async function GET() {
   await dbConnect();
   try {
     const auth_token = (await cookies()).get("auth_token")?.value;
-    const tokendetail: any = verifyToken(auth_token as string);
-    if (!tokendetail || tokendetail === "") {
+    if (!auth_token) {
+      return Response.json(
+        { success: false, message: "Token not found" },
+        { status: 401 }
+      );
+    }
+
+    const tokendetail: any = verifyToken(auth_token);
+    if (!tokendetail?.email) {
       return Response.json({
         success: false,
         message: "User details not found",
       });
     }
 
-    const existingUser: any = await UserModel.find({
+    const existingUser: any = await UserModel.findOne({
       email: tokendetail.email,
     });
     if (!existingUser) {
       return Response.json(
-        {
-          success: false,
-          message: "User donot exist",
-        },
+        { success: false, message: "User does not exist" },
         { status: 404 }
       );
     }
 
-    const interviewID: Array<mongoose.Types.ObjectId | interview_interface> =
+    const interviewIDs: mongoose.Types.ObjectId[] =
       existingUser.interview_given;
-
-    if (interviewID.length == 0) {
+    if (!interviewIDs || interviewIDs.length === 0) {
       return Response.json(
-        {
-          success: false,
-          message: "No interview given",
-        },
+        { success: false, message: "No interview given" },
         { status: 402, statusText: "NO INTERVIEW" }
       );
     }
 
-    let appliedJobs: Array<{
-      jobtitle: string;
-      performanceID: mongoose.Types.ObjectId;
-    }> = [];
+    const appliedJobs = await Promise.all(
+      interviewIDs.map(async (id) => {
+        const InterviewDetails: any = await interview_model.findById(id);
+        if (!InterviewDetails) return null;
 
-    interviewID.map(async (id) => {
-      const InterviewDetails: any = await interview_model.findById(id);
-      const JOBID = InterviewDetails.job_applied;
-      const PerformanceID = InterviewDetails.performance;
-      const jobdetails: any = await job_model.findById(JOBID);
-      appliedJobs.push({
-        jobtitle: jobdetails.job_title,
-        performanceID: PerformanceID,
-      });
-    });
+        const jobdetails: any = await job_model.findById(
+          InterviewDetails.job_applied
+        );
+        if (!jobdetails) return null;
+
+        return {
+          jobtitle: jobdetails.job_title,
+          performanceID: InterviewDetails.performance,
+        };
+      })
+    );
+
+    const validAppliedJobs = appliedJobs.filter((j) => j !== null);
 
     return Response.json(
       {
         success: true,
         message: "JOB TITLE FOUND",
-        interview_given: appliedJobs,
+        interview_given: validAppliedJobs,
       },
       { status: 200 }
     );
-  } catch (e) {}
+  } catch (e) {
+    return Response.json(
+      {
+        success: false,
+        message: "Some error occurred",
+        error: e,
+      },
+      { status: 500 }
+    );
+  }
 }

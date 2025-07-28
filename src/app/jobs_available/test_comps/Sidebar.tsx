@@ -1,19 +1,18 @@
 import { Button } from "@/components/ui/button";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Separator } from "@/components/ui/separator";
-import { Inter, Poppins, Roboto } from "next/font/google";
-import Recent_act from "./RecentActDiv";
-
+import { Poppins, Roboto } from "next/font/google";
 import User_profile_drpdwn from "./UserProfileDrpD";
 import { InfinityIcon } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useLoginStore, useSkillStore } from "@/app/store/useStore_Zustand";
+import { useSkillStore } from "@/app/store/useStore_Zustand";
 
-// My Dashboard
-// Jobs available
-// Interview secion
+import dynamic from "next/dynamic";
+// import RecentActivityArea from "./RecentActivityArea";
+const RecentActivityArea = dynamic(
+  () => import("@/app/jobs_available/test_comps/RecentActivityArea")
+);
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -89,10 +88,7 @@ export default function Sidebar() {
             </div>
             <div className="">
               <div className="m-2 text-sm text-white/50">Recent</div>
-              <Recent_act />
-              <Recent_act />
-              <Recent_act />
-              <Recent_act />
+              <RecentActivityArea />
             </div>
           </div>
         </div>
