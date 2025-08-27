@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -15,12 +15,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CloudUpload } from "lucide-react";
+import {
+  Check,
+  CircleCheckBig,
+  CloudUpload,
+  FileInput,
+  Loader2,
+  Upload,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { useInterviewRole } from "@/app/store/useStore_Zustand";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { redirect } from "next/navigation";
+import { useEdgeStore } from "@/lib/edgestore";
+import { ProgressBar } from "@/components/upload/progress-bar";
+import { Progress } from "@/components/ui/progress";
+// import { MultiFileDropzoneUsage } from "./FileUpload";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,9 +48,18 @@ export default function UploadResumeDialog({
   company: string;
   job_id: string;
 }) {
+  const { edgestore } = useEdgeStore();
   const [is_loading, set_is_loading] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false);
   const { setJobRole } = useInterviewRole();
   const { setUser, user } = useInterviewRole();
+  const [files, setfiles] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [progress, setProgress] = useState<number>(0);
+  const [fileName, setFileName] = useState<string | undefined>("");
+  const [fileUrl, setfileUrl] = useState<string|null>(null)
+  // const [fileUrl,]
+  // let fileUrl: string | null = null;
 
   const handle_click = async () => {
     if (!user || user.length == 0) {
@@ -58,6 +79,60 @@ export default function UploadResumeDialog({
     }
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files;
+    if (!file) {
+      console.log("ERROR");
+    } else {
+      console.log(file);
+      // console.log(file.item(0)?.name)
+      setFileName(file.item(0)?.name.toString());
+      setfiles(file[0]);
+    }
+  };
+  const handleDivClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const resetState = () => {
+    setfiles(null);
+    setProgress(0);
+    setFileName("");
+    setUploadLoading(false);
+  };
+
+  const cancelUpload = async () => {
+    console.log(fileUrl)
+    if (fileUrl != null) {
+      await edgestore.publicFiles.delete({
+        url: fileUrl,
+      });
+    }
+
+    setfileUrl(null)
+    resetState();
+  };
+
+  const handleUploadClick = async () => {
+    if (!files) {
+      console.error("File not found");
+    } else {
+      setUploadLoading(true);
+      const res = await edgestore.publicFiles.upload({
+        file: files,
+        onProgressChange: (p) => {
+          setProgress(p);
+        },
+      });
+
+      // fileUrl = res.url;
+      setfileUrl(res.url)
+      // console.log(res.url);
+    }
+
+    setUploadLoading(false);
+  };
+
   return (
     <div>
       <Dialog>
@@ -68,6 +143,13 @@ export default function UploadResumeDialog({
         </DialogTrigger>
 
         <DialogContent className="bg-[#1A1A1A] border-0">
+          <input
+            type="file"
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+            ref={fileInputRef}
+          />
+
           <div>
             <Card className="bg-[#292929] border-0">
               <CardHeader>
@@ -84,20 +166,18 @@ export default function UploadResumeDialog({
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="m-2">
-                  <div className="text-white mb-2">
-                    Please enter your name here...
-                  </div>
+                <div className="mb-3 mt-2">
                   <Input
                     type="text"
-                    className="text-white border-1 border-b-white"
-                    placeholder="Your name"
+                    className="text-white border-0 bg-zinc-700  "
+                    placeholder="Enter your name"
                     onChange={(e) => setUser(e.target.value)}
                   />
                 </div>
+
                 <div
                   className="border-dotted w-full h-full border-4 rounded-xl justify-center items-center flex hover:opacity-70 cursor-pointer"
-                  onClick={() => alert("Feature awaited")}
+                  onClick={handleDivClick}
                 >
                   <div className="items-center justify-center">
                     <div className=" justify-center items-center flex">
@@ -112,10 +192,44 @@ export default function UploadResumeDialog({
                   </div>
                 </div>
 
+                {files != null ? (
+                  <div className="text-white p-1 my-2 flex justify-between items-center py-2">
+                    <div className="w-full">
+                      <div className="w-full overflow-ellipsis overflow-hidden">
+                        {fileName}
+                      </div>
+                      <div className="w-full pr-4">
+                        <Progress
+                          value={progress}
+                          className="[&>div]:bg-[#64f0ff] bg-zinc-700"
+                        />
+                      </div>
+                    </div>
+                    {progress == 100 ? (
+                      <Button variant={"destructive"} onClick={cancelUpload}>
+                        <X />
+                      </Button>
+                    ) : !uploadLoading ? (
+                      <Button variant={"secondary"} onClick={handleUploadClick}>
+                        <Upload />
+                      </Button>
+                    ) : (
+                      <Button variant={"secondary"} disabled>
+                        <Loader2 className="animate-spin" />
+                      </Button>
+                    )}
+                  </div>
+                ) : null}
+
                 <div className=" justify-end flex mt-8">
                   <DialogClose>
                     <div className="mr-3">
-                      <Button className="hover:bg-neutral-700">Cancel</Button>
+                      <Button
+                        className="hover:bg-neutral-700"
+                        onClick={resetState}
+                      >
+                        Cancel
+                      </Button>
                     </div>
                   </DialogClose>
                   <div>

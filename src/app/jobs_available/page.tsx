@@ -75,43 +75,45 @@ export default function Page() {
           {/* NAVBAR */}
 
           {/*Job cards from DB*/}
-          {loading ? (
-            <div className=" p-2 flex items-center justify-center h-screen">
-              <Lottie
-                animationData={animation}
-                loop={true}
-                className="size-50"
-              />
-            </div>
-          ) : (
-            <div
-              className="overflow-auto scrollbar-none"
-              style={{
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-              }}
-            >
-              <div
-                className="flex px-4 flex-wrap w-full justify-evenly break-words overflow-x-hidden"
-                role="list"
-              >
-                {AllJobs.map((job) => (
-                  <Jobcard
-                    key={job._id}
-                    job_id={job._id}
-                    job_title={job.job_title}
-                    company_name={job.company_name}
-                    job_description={job.job_description}
-                    country={"India"} // fallback
-                    location={job.location}
-                    salary={job.salary}
-                    skills_required={job.skills_required}
-                    experience_required={job.experience_required}
-                  />
-                ))}
+          <div className=" flex justify-center overflow-auto">
+            {loading ? (
+              <div className=" p-2 flex items-center justify-center h-screen">
+                <Lottie
+                  animationData={animation}
+                  loop={true}
+                  className="size-50"
+                />
               </div>
-            </div>
-          )}
+            ) : (
+              <div
+                className="overflow-auto scrollbar-none max-w-5xl"
+                style={{
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}
+              >
+                <div
+                  className="flex px-4 flex-wrap w-full justify-evenly break-words overflow-x-hidden"
+                  role="list"
+                >
+                  {AllJobs.map((job) => (
+                    <Jobcard
+                      key={job._id}
+                      job_id={job._id}
+                      job_title={job.job_title}
+                      company_name={job.company_name}
+                      job_description={job.job_description}
+                      country={"India"} // fallback
+                      location={job.location}
+                      salary={job.salary}
+                      skills_required={job.skills_required}
+                      experience_required={job.experience_required}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Job cards from DB*/}
         </MainBody>

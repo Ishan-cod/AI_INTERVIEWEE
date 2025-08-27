@@ -40,6 +40,14 @@ type SkillHandler = {
   clearSkills: () => void;
 };
 
+type CodeHandler = {
+  code: string;
+  setCode: (code: string) => void;
+  toSend: boolean;
+  triggerSend: () => void;
+  resetSend: () => void;
+};
+
 type InterviewTranscript = {
   transscpt: Array<{ sender: "ai" | "human"; content: string }>;
   updateTranscript: (sender: "ai" | "human", content: string) => void;
@@ -123,5 +131,19 @@ export const useTranscriptStore = create<InterviewTranscript>((set) => ({
             { sender: "human", content: content },
           ],
         }));
+  },
+}));
+
+export const useCodeHandler = create<CodeHandler>((set) => ({
+  code: "",
+  setCode: (code: string) => {
+    set(() => ({ code: code }));
+  },
+  toSend: false,
+  triggerSend: () => {
+    set(() => ({ toSend: true }));
+  },
+  resetSend: () => {
+    set(() => ({ toSend: false }));
   },
 }));

@@ -1,3 +1,5 @@
+import { EdgeStoreProvider } from "@/lib/edgestore";
+
 export default function DashboardLayout({
   children,
 }: {
@@ -5,7 +7,10 @@ export default function DashboardLayout({
 }) {
   return (
     <body>
-      <main>{children}</main>
+      <EdgeStoreProvider>
+        <main>{children}</main>
+      </EdgeStoreProvider>
     </body>
   );
 }
+  

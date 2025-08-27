@@ -18,11 +18,6 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-// const roboto = Roboto({
-//   subsets: ["latin"],
-//   variable: "--font-roboto",
-// });
-
 const default_code_obj = [
   {
     cpp: `#include<iostream>
@@ -75,7 +70,10 @@ export default function Page() {
                         <LanguageChanger />
                       </div>
                       <div>
-                        <Button className="m-1.5 mt-1 mb-0">
+                        <Button
+                          className="m-1.5 mt-1 mb-0"
+                          variant={"secondary"}
+                        >
                           <SquareCheckBig />
                         </Button>
                       </div>
