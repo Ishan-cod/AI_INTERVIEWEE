@@ -1,3 +1,4 @@
+import { useCodeHandler } from "@/app/store/useStore_Zustand";
 import { Editor } from "@monaco-editor/react";
 
 import React from "react";
@@ -8,6 +9,7 @@ interface editor_interface {
 }
 
 export default function CodeEditor(editor_lang: editor_interface) {
+  const { setCode } = useCodeHandler();
   return (
     <Editor
       defaultLanguage={editor_lang.language}
@@ -21,6 +23,7 @@ export default function CodeEditor(editor_lang: editor_interface) {
         minimap: { enabled: false },
         automaticLayout: true, // 🔄 Optional: adjusts to container resize
       }}
+      onChange={(e) => setCode(e || editor_lang.default_code)}
       className="absolute inset-0"
     />
   );
