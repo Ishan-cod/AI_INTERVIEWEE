@@ -2,13 +2,13 @@ import {
   ChatPromptTemplate,
   MessagesPlaceholder,
 } from "@langchain/core/prompts";
-import { Groq_LLM } from "../ai_model";
+import { Google_LLM } from "../ai_model";
 import { AIMessage, BaseMessage, HumanMessage } from "@langchain/core/messages";
 
 // const chat_history: BaseMessage[] = [];
 
 async function chat_bot(human_message: string, chat_history: BaseMessage[]) {
-  const model = Groq_LLM;
+  const model = Google_LLM;
 
   const context_prompt: string = `1. You are a friendly, helpful and jovial interviewer. Ask the user questions based on the role they provide.
 

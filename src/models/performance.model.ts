@@ -44,7 +44,7 @@ const PerformanceSchema: Schema<PerformanceInterface> = new Schema(
     overall_score: { type: Number, required: true },
     hireable: { type: Boolean, required: true },
     question_feedback: { type: [PerFeedbackSchema], required: true },
-    strengths: { type: [StrengthSchema], required: true }, // ← FIXED
+    strengths: { type: [StrengthSchema], required: true }, 
     action_items: { type: [String], required: true },
     concluding_statement: { type: String, required: true },
   },
