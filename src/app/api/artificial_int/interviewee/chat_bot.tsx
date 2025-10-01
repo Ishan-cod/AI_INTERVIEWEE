@@ -51,8 +51,8 @@ RULES :
       data: response.content,
     };
 
-    chat_history.push(new HumanMessage(human_message));
-    chat_history.push(new AIMessage(response.content.toString()));
+    // chat_history.push(new HumanMessage(human_message));
+    // chat_history.push(new AIMessage(response.content.toString()));
 
     // console.log("This is chat_history : ", chat_history);
 
