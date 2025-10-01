@@ -8,7 +8,7 @@ export default function DashboardLayout({
   return (
     <body>
       <main>{children}</main>
-      <Toaster />
+      {/* <Toaster /> */}
     </body>
   );
 }
