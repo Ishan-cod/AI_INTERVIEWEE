@@ -105,11 +105,7 @@ export default function Message_BOX() {
   );
 
   const [messages, setMessages] = useState<Message[]>([]);
-  const [chatHistory, setChatHistory] = useState<BaseMessage[]>(() => [
-    new SystemMessage(
-      "When the Human tells their name and job role, greet them and ask for self intro politely, then begin the interview."
-    ),
-  ]);
+  const [chatHistory, setChatHistory] = useState<BaseMessage[]>([]);
 
   const { isSpeaking, speakText } = useSpeech();
   const { isLoading, makeApiCall } = useApiCall();
